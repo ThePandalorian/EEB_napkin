@@ -1,0 +1,167 @@
+\chapter{Turing Patterns}\label{chap_Turing}
+
+Consider a system consisting of two species of one-dimensional animals. Let the number of individuals of species 1 in the total population be given by $N_1$ and let the number of individuals of species 2 in the population be given by $N_2$. Let the dynamics of this system be given by the coupled reaction-diffusion equations:
+\begin{equation}
+	\label{sys_dyn}
+	\begin{aligned}
+		\frac{\partial N_1}{\partial t} &= f_{1}(N_1,N_2) + D_{1}\frac{\partial^2 N_{1}}{\partial x^2}\\
+		\frac{\partial N_2}{\partial t} &= f_{2}(N_1,N_2) + D_{2}\frac{\partial^2 N_{2}}{\partial x^2}
+	\end{aligned}
+\end{equation}
+where $D_i$ represents the diffusion constant for the $i$th species. We are interested in knowing whether a fixed point $(N_{1}^{*},N_{2}^{*})$ which is stable in the mean-field case (when $D_1 = D_2 = 0$) remains stable when diffusion takes place.
+\bigskip
+\section{Linear stability analysis in the mean-field case}
+Recall that for any two-dimensional dynamical system of the form:
+\begin{align*}
+	\dot{x} &= g(x,y)\\
+	\dot{x} &= h(x,y)
+\end{align*}
+with Jacobian $\mathbf{J}$, a fixed point $(x^*,y^*)$ is stable iff:
+\begin{align*}
+	\mathrm{Tr}(\left.\mathbf{J}\right\vert_{(x^*,y^*)}) < 0\\
+	\mathrm{Det}(\left.\mathbf{J}\right\vert_{(x^*,y^*)}) > 0
+\end{align*}
+\myfig{.5}{figures/turing_patterns/NLD_2D_systems.pdf}{Classification of the fixed points of a linearized 2D system. T is the trace of the Jacobian and D is the determinant of the Jacobian of the system.}{fig 1}
+
+Substituting $D_1 = D_2 = 0$ into equation \eqref{sys_dyn}, we see that in the mean-field case, the Jacobian is given by:
+\begin{equation*}
+	J = \begin{bmatrix}
+		\frac{\partial f_1}{\partial N_1} & \frac{\partial f_1}{\partial N_2}\\
+		\frac{\partial f_2}{\partial N_1} & \frac{\partial f_2}{\partial N_2}\\
+	\end{bmatrix}
+\end{equation*}
+Letting $\alpha_{ij} = \left.\frac{\partial f_i}{\partial N_j}\right\vert_{(N_{1}^*,N_{2}^*)}$ for notational ease, we see that a fixed point $(N_{1}^*,N_{2}^*)$ is stable iff:
+\begin{equation}
+	\label{MFE_stability}
+	\begin{aligned}
+		\alpha_{11} + \alpha_{22} < 0\\
+		\alpha_{11}\alpha_{22} - \alpha_{12}\alpha_{21} > 0
+	\end{aligned}
+\end{equation}
+\bigskip
+\section{Linear stability analysis when diffusion is present}
+We will now consider a situation where $D_1$ and $D_2$ are not zero. Let $(N_{1}^*,N_{2}^*)$ be a fixed point for equation \eqref{sys_dyn}. We consider a small perturbation  $(N_1,N_2) \to (N_{1}^* + \varepsilon_1,N_{2}^* + \varepsilon_2)$. Plugging this into the expression for $\frac{\partial N_1}{\partial t}$ in equation \eqref{sys_dyn} yields:
+\begin{equation}
+	\label{perturb_eqn}
+	\frac{\partial}{\partial t}(N_{1}^* + \varepsilon_1) = f_1(N_{1}^* + \varepsilon_1,N_{2}^* + \varepsilon_2) + D_1\frac{\partial^2}{\partial x^2}(N_{1}^* + \varepsilon_1)
+\end{equation}
+We can now Taylor expand the first term on the RHS as:
+\begin{equation*}
+	f_1(N_{1}^* + \varepsilon_1,N_{2}^* + \varepsilon_2) = \underbrace{f_1(N_{1}^*,N_{2}^*)}_{=\text{ }0} + \varepsilon_1\left.\frac{\partial f_1}{\partial N_1}\right\vert_{(N_{1}^*,N_{2}^*)} + \varepsilon_2\left.\frac{\partial f_1}{\partial N_2}\right\vert_{(N_{1}^*,N_{2}^*)} + \cdots
+\end{equation*}
+Substituting this back into equation \eqref{perturb_eqn} yields:
+\begin{equation*}
+	\frac{\partial \varepsilon_1}{\partial t} = D_1\frac{\partial^2\varepsilon_1}{\partial x^2} + \varepsilon_1\left.\frac{\partial f_1}{\partial N_1}\right\vert_{(N_{1}^*,N_{2}^*)} + \varepsilon_2\left.\frac{\partial f_1}{\partial N_2}\right\vert_{(N_{1}^*,N_{2}^*)} + \cdots
+\end{equation*}
+Following the same procedure for $\frac{\partial N_2}{\partial t}$ and neglecting 2nd order and higher terms gives us:
+\begin{equation}
+	\label{RDE_stability}
+	\begin{aligned}
+		\frac{\partial \varepsilon_1}{\partial t} &=  \alpha_{11}\varepsilon_1 + \alpha_{12}\varepsilon_2 + D_1\frac{\partial^2\varepsilon_1}{\partial x^2}\\
+		\frac{\partial \varepsilon_2}{\partial t} &=  \alpha_{21}\varepsilon_1 + \alpha_{22}\varepsilon_2 + D_2\frac{\partial^2\varepsilon_2}{\partial x^2}
+	\end{aligned}
+\end{equation}
+\bigskip
+\section{Stability criteria for a homogeneous perturbation}
+
+If our perturbation is spatially homogeneous, then $\frac{\partial^2\varepsilon_1}{\partial x^2} = \frac{\partial^2\varepsilon_2}{\partial x^2} = 0$. Substituting these conditions into equation \eqref{RDE_stability} yields a system of PDEs that is linear in $\varepsilon_1$ and $\varepsilon_2$. Thus, the stability criterion for such a system is given by equation \eqref{MFE_stability}. We are therefore led to conclude that any fixed point that is stable in the mean-field case remains stable to spatially homogeneous perturbations.
+\bigskip
+\section{Stability criteria for a periodic perturbation}
+Consider instead a perturbation that is periodic in space. Specifically, consider:
+\begin{equation}
+	\label{periodic_perturb}
+	\begin{aligned}
+		\varepsilon_1 &= a_{1_k}\sin(\frac{k\pi x}{L})\\
+		\varepsilon_2 &= a_{2_k}\sin(\frac{k\pi x}{L})
+	\end{aligned}
+\end{equation}
+For notational ease, let $\beta = \frac{k\pi}{L}$. We would like to see how the amplitudes $a_{i_k}$ of the perturbations change with time. We would conclude that a fixed point is stable if perturbations die out with time. We will find out how perturbations change with time by substituting \eqref{periodic_perturb} back into \eqref{RDE_stability}. For $i = 1,2$, we have:
+\begin{equation}
+	\label{for_subs}
+	\begin{aligned}
+		\frac{\partial \epsilon_i}{\partial t} &= \sin(\beta x)\frac{da_{i_k}}{dt}\\
+		D_{i}\frac{\partial^2\varepsilon_i}{\partial x^2} &= -D_{i}a_{i_{k}}\beta^{2}\sin(\beta x)=-D_i\beta^2\epsilon_i
+	\end{aligned}
+\end{equation}
+Substituting \eqref{periodic_perturb} and \eqref{for_subs} into \eqref{RDE_stability} gives us:
+\begin{equation}
+	\label{periodic_linearized}
+	\begin{aligned}
+		\frac{da_{1_k}}{dt} &= (\alpha_{11} - D_1\beta^2)a_{1_k} + \alpha_{12}a_{2_k}\\
+		\frac{da_{2_k}}{dt} &= \alpha_{21}a_{1_k} + (\alpha_{22} - D_2\beta^2)a_{2_k}
+	\end{aligned}
+\end{equation}
+or, in more compact notation:
+\begin{equation*}
+	\dot{\mathbf{a}}=\mathbf{J_p}\mathbf{a}
+\end{equation*}
+where $\mathbf{a} = \begin{bmatrix}
+	{a_{1_k}}\\
+	{a_{2_k}}
+\end{bmatrix}$ and $\mathbf{J_p}$ is the Jacobian of the system, given by:
+\begin{equation}
+	\label{jacobian}
+	\mathbf{J_p} = 
+	\begin{bmatrix}
+		\alpha_{11} - D_1\beta^2 & \alpha_{12}\\
+		\alpha_{21} & \alpha_{22} - D_2\beta^2
+	\end{bmatrix}
+\end{equation}
+This is a simple system of ODEs that is linear in $a_{1_k}$ and $a_{2_k}$. Thus, as before, we require $\mathrm{Tr}(\mathbf{J_p} < 0)$ and $\mathrm{Det}(\mathbf{J_p} > 0)$ for stability. Thus, we require:
+\begin{align}
+	\alpha_{11} - D_1\beta^2 + \alpha_{22} - D_2\beta^2 < 0 \label{trace_criterion}\\
+	(\alpha_{11} - D_1\beta^2)(\alpha_{22} - D_2\beta^2) - \alpha_{12}\alpha_{21} > 0 \label{det_criterion}
+\end{align}
+Let us examine these two criteria in detail.
+\medskip
+\subsection{The Trace}
+From \eqref{MFE_stability}, we know that $\alpha_{11} + \alpha_{22} < 0$. Further, by definition, we have $D_1 > 0$ and $D_2 > 0$. Thus, rearranging equation \eqref{trace_criterion}:
+\begin{equation*}
+	\alpha_{11} - D_1\beta^2 + \alpha_{22} - D_2\beta^2 = \underbrace{\alpha_{11} + \alpha_{22}}_{<\text{ }0} - \underbrace{(D_1+ D_2)\beta^2}_{>\text{ }0}
+\end{equation*}
+we see that \eqref{trace_criterion} is always satisfied for a point that was stable in the mean-field equilibrium.
+\medskip
+\subsection{The Determinant}
+For equation \eqref{det_criterion}, we use \eqref{MFE_stability} and make the following observation:
+\begin{equation*}
+	(\alpha_{11} - D_1\beta^2)(\alpha_{22} - D_2\beta^2) - \alpha_{12}\alpha_{21} = \underbrace{(\alpha_{11}\alpha_{22} - \alpha_{12}\alpha_{21})}_{> \text{ } 0} + \underbrace{D_{1}D_{2}\beta^4}_{> \text{ } 0} - \beta^{2}(\alpha_{22}D_1 + \alpha_{11}D_2)
+\end{equation*}
+Though the first two parts are always positive, the last term need not be positive. Thus, the determinant need not be positive, and stability in the mean field equilibrium here does \textit{not} guarantee stability in the diffusive case (!). Diffusion can thus destabilize points that were previously stable when diffusion was disallowed. This sort of diffusion-induced destabilization is called `Turing instability'.
+\medskip
+\subsection{Identifying sufficient criteria for stability}
+
+
+When, then, is stability of a fixed point guaranteed? Note that we only need to examine the effect of the last term of the previous equation for this. Thus, we require:
+\begin{equation}
+	\label{destabilizing_term}
+	\beta^{2}(\alpha_{22}D_1 + \alpha_{11}D_2) < 0
+\end{equation}
+Now, since $D_1 > 0$, we are allowed to take out a factor of $D_1$ from the addition term. Thus, the condition:
+\begin{equation}
+	\label{sufficient}
+	\alpha_{22} + \alpha_{11}\frac{D_2}{D_1} < 0
+\end{equation}
+is sufficient to ensure stability of the fixed point. What does this mean biologically? Recall that $\alpha_{11}$ and $\alpha_{22}$ represent the `self-regulation' (or `autocatalytic') rates of species 1 and 2 respectively. Consider the case in which $\alpha_{22} < 0$ and $\alpha_{11} > 0$. In this case, for \eqref{sufficient} to be satisfied, we require that $\frac{D_2}{D_1}$ is small, i.e $D_2 < D_1$. On the other hand, if $\alpha_{22} > 0$ and $\alpha_{11} < 0$, we would require that $\frac{D_2}{D_1}$ is large, i.e $D_2 > D_1$.\\
+Thus, equation \eqref{sufficient} is telling us that for a MFE stable fixed point to remain stable, the species with a positive self-regulation ($\alpha_{ii} > 0$) should have a high diffusion constant, whereas the species with negative self-regulation ($\alpha_{ii} < 0$) should have a low diffusion constant. If the two species diffuse at comparable rates, i.e if $D_1 \approx D_2$, then this condition is always satisfied. To see this, we can substitute $D_1 = D_2$ into equation \eqref{sufficient} and recall from \eqref{MFE_stability} that $\alpha_{22} + \alpha_{11} < 0$ for any fixed point that is stable in the mean-field equilibrium.
+
+\medskip
+
+\subsection{General criteria for Turing instability (I think?)}
+
+In general, letting $\lambda = \beta^2$, we see that the determinant $\Delta$ is a quadratic in $\lambda$ given by:
+
+\begin{equation}
+	\label{instability_det}
+	\Delta = D_1D_2\lambda^2 - (\alpha_{11}D_2+\alpha_{22}D_1)\lambda + (\alpha_{11}\alpha_{22}-\alpha_{12}\alpha_{21})
+\end{equation}
+
+Since the trace of the Jacobian is always non-positive, the system can only move from stability to instability if we go from $\Delta > 0$ to $\Delta < 0$. A few insights can be gained from this. For one, for a system to always be stable, it would need to have at most one real root for $\lambda$ in equation \eqref{instability_det}. However, calculating the discriminant for this equation, we find:
+\begin{align*}
+	\underbrace{(\alpha_{11}D_2+\alpha_{22}D_1)^2}_{\geq 0} - 4D_1D_2\underbrace{(\alpha_{11}\alpha_{22}-\alpha_{12}\alpha_{21})}_{< 0 \text{   by equation \eqref{MFE_stability}}} > 0
+\end{align*}
+Thus, if $D_1D_2 > 0$ (\textit{i.e} one of the species is diffusing faster than the other), equation \eqref{instability_det} always has at least one root, meaning that Turing instability can \textit{always} be induced in such reaction diffusion systems by eliciting a suitable perturbation (i.e one with a suitable $\lambda$). What kind of perturbation? Well, the switch from stability to instability occurs at $\Delta=0$. In particular, at this point, we must have $\frac{\partial \Delta}{\partial \lambda} = 0$, which from equation \eqref{instability_det} implies
+
+\begin{align*}
+	\lambda &= \frac{D_2\alpha_{11}+D_1\alpha_{22}}{2D_1D_2} \\
+	\Rightarrow \frac{k\pi}{L} &= \left(\frac{D_2\frac{\partial f_1}{\partial N_1}+D_1\frac{\partial f_2}{\partial N_2}}{2D_1D_2}\right)^\frac{1}{2}
+\end{align*}

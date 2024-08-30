@@ -1,0 +1,25 @@
+.DS_Store
+# TeX and biblatex generated files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+/TeX/*.aux
+/TeX/*.bbl
+/TeX/*.bcf
+/TeX/*.blg
+/TeX/*.lof
+/TeX/*.log
+/TeX/*.lot
+/TeX/*.out
+/TeX/*.run.xml
+/TeX/*.synctex.gz
+/TeX/*.toc
+/TeX/.DS_Store

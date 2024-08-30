@@ -1,0 +1,278 @@
+\chapter{Random walks}
+
+Individuals often move around for various important reasons such as foraging or finding a mate. A tool that is often used to model such movement is the theory of \textit{random walks}. In this lecture, we look at a relatively non-technical introduction to unbiased random walks.
+
+\section{A simple random walk}
+
+Consider an organism on a discrete one-dimensional space. Let $X_t$ be the random variable representing the position of the organism at time $t$. Throughout this discussion, we assume that time is discrete. Consider a stochastic process that assigns the following movement rule to the animal:
+\begin{equation}
+	\label{bernoulli}
+	X_{t+1} = 
+	\begin{cases}
+		X_t + a & \textrm{with probability } \frac{1}{2}\\
+		X_t - a & \textrm{with probability } \frac{1}{2}
+	\end{cases}
+\end{equation}
+The organism can be thought of as executing as a 'random walk' over the one-dimensional space. Figure~\ref{fig1} shows what a trajectory produced by one such process may look like in two dimensions. In this figure, the blue square indicates the initial position of the organism, at the origin, and the red square indicates the position after 10,000 time steps. 
+%%%%%%%% FIGURE
+% first parameter is a real number which is the scale factor; 
+% second is the file name; 
+% third is caption; 
+% fourth gives the LaTeX label for future \ref
+\myfig{.561}{figures/random_walks/random_walk_example_traj.pdf}{A sample trajectory of an organism moving according to Equation~\eqref{bernoulli}.}{fig1}
+
+More generally, a \textit{one-dimensional random walk} is a stochastic process of the form:
+\begin{equation}
+	\label{randwalk}
+	X_{t+1} = X_{t} + a
+\end{equation}
+where $a$ is a random variable with some probability distribution. In Equation~\eqref{bernoulli}, a is a bernoulli(1/2) random variable.
+\\
+If we were to observe an organism starting at $X_0$ and moving along one dimension according to \eqref{bernoulli} for $t$ timesteps, where may we expect it to end up? In other words, what is the expectation value of the \textit{displacement} $D_t \coloneqq X_t - X_0$? The calculation for the displacement is straightforward if one notices that $X_t$ can be written in terms of $X_{t-1}$ as follows:
+\begin{align*}
+	\big\langle X_t \big\rangle &= \frac{1}{2}(\big\langle X_{t-1} \big\rangle + a) + \frac{1}{2}(\big\langle X_{t-1} \big\rangle - a) \\
+	&= \big\langle X_{t-1} \big\rangle
+\end{align*}
+Thus, applying this recursively $t$ times, we obtain:
+\begin{align*}
+	\big\langle X_{t} \big\rangle &= X_0\\
+	\implies \big\langle D_{t} \big\rangle&=0
+\end{align*}
+In other words, the expectation value is 0, which sounds like the organism hasn't moved at all! It is easy to see that this argument is independent of the dimensionality of the walk. However, a cursory glance at \ref{fig1} tells us that the organism has moved away from the origin after all. Where, then, have we gone wrong?\\
+The issue is that since the displacement can be either positive or negative, all our calculation tells us is that if we had many such systems, the displacement would be zero \textit{on average} (Note: such a walk is often called an 'unbiased' random walk). However, one could get $\langle D_{t} \rangle = 0$ even if the organism went very far off in the positive $x$ direction in half of the times we tried the process, and very far off in the negative $x$ direction in the other half of the times. The expectation value thus fails to capture the notion of 'spread away from the starting point'. For this, we require a slightly different quantity.
+
+\subsection{The mean square displacement}
+
+Intuitively, the expectation value can be zero because realizations with a high positive distance covered 'cancel out' with those which had a high negative distance covered, since both are equally likely to occur. To account for this, we will instead define the 'mean square displacement' (MSD) of a random walk as:
+
+\begin{equation*}
+	MSD(t) \coloneqq \big\langle(X_t - X_0)^2\big\rangle 
+\end{equation*}
+
+We can slightly simplify the term on the right using the linearity of the expectation value as follows:
+
+\begin{equation}
+	\label{general_MSD_def}
+	MSD(t) = \big\langle X_{t}^{2}\big\rangle -2X_{0}\big\langle X_{t}\big\rangle + X_{0}^2 
+\end{equation}
+
+Using the fact that $\big\langle X_{t}\big\rangle = X_0$ for an unbiased random walk, we then see that:
+\begin{equation}
+	\label{MSD_def}
+	MSD(t) = \big\langle X_{t}^{2}\big\rangle - X_{0}^2
+\end{equation}
+Equation~\eqref{MSD_def} is very general, and applies to any unbiased one-dimensional random walk whatsoever. For the random walk given in Equation~\eqref{bernoulli}, we have:
+\begin{equation*}
+	X_{t}^2 = 
+	\begin{cases}
+		X_{t-1}^2 + a^2 + 2aX_{t-1} & \textrm{with probability } \frac{1}{2}\\
+		X_{t-1}^2 + a^2 - 2aX_{t-1} & \textrm{with probability } \frac{1}{2}
+	\end{cases}
+\end{equation*}
+and thus
+\begin{equation*}
+	\big\langle X_{t}^2\big\rangle = \big\langle X_{t-1}^2+a^2\big\rangle
+\end{equation*}
+This is a recursive equation. One can write $X_{t-1}^2$ in terms of $X_{t-2}^2$, $X_{t-2}^2$ in terms of $X_{t-3}^2$, and so on. After doing this $t$ times, we arrive at:
+\begin{equation*}
+	\big\langle X_{t}^2\big\rangle = X_{0}^2 + ta^2
+\end{equation*}
+Substituting this into Equation~\eqref{MSD_def}, we arrive at:
+\begin{equation}
+	\label{unbiased_MSD}
+	MSD(t) = ta^2
+\end{equation}
+This is telling us something profound. It tells us that as the time increases, we expect the MSD to linearly increase, meaning that in any given realization, an organism executing such a walk is likely to be found further away from the origin as time increases. Note that this is despite the fact that the organism is \textit{equally likely} to go in either the positive or the negative direction at any given instance(!).
+
+\subsection{A general expression for the MSD}
+
+Consider a random walk of the form \eqref{randwalk}. Let the random variable $a$ have mean $\mu$ and variance $\sigma^2$. We will now obtain an expression for the MSD of such a process. Since we are not assuming that the walk is unbiased, we must use equation \eqref{general_MSD_def} for the definition of the MSD.
+
+Since $\big\langle X_{t}\big\rangle = \big\langle X_{t-1}\big\rangle + \big\langle a \big\rangle$, we can apply this relation recursively to obtain:
+
+\begin{equation}
+	\label{xt_recursive}
+	\big\langle X_{t}\big\rangle = X_0 + t\mu
+\end{equation}
+
+We can also calculate $\big\langle X_{t}^2\big\rangle$ in a similar manner:
+\begin{align*}
+	\big\langle X_{t-}^2\big\rangle &= \big\langle X_{t-1}^2\big\rangle + \big\langle a^2 \big \rangle + 2\big\langle aX_{t-1}\big\rangle \\
+	&= \big\langle X_{t-1}^2\big\rangle + (\sigma^2 + \mu^2) + 2\left[\textrm{cov}(a,X_{t-1})+\mu\big\langle X_{t-1}\big\rangle\right]\\
+\end{align*}
+Substituting equation \eqref{xt_recursive}, we obtain:
+\begin{equation*}
+	\big\langle X_{t}^2\big\rangle = \big\langle X_{t-1}^2\big\rangle + (\sigma^2 + \mu^2) + 2\textrm{cov}(a,X_{t-1})+\mu(X_0 + t\mu) 
+\end{equation*}
+This, too, can be applied recursively to obtain:
+\begin{equation}
+	\label{xtsq_recursive}
+	\big\langle X_{t}^2\big\rangle = X_{0}^2 + t(\sigma^2 + \mu^2) + 2t\mu(X_0 + (t-1)\mu) + 2\sum\limits_{k=1}^{t-1}\textrm{cov}(a,X_k)
+\end{equation}
+
+Finally, we can plug \eqref{xt_recursive} and \eqref{xtsq_recursive} into \eqref{general_MSD_def} to obtain our final expression:
+\begin{equation}
+	\label{general_MSD}
+	MSD(t) = t\left[\sigma^2+\mu^{2}(2t-1)\right]+2\sum\limits_{k=1}^{t-1}\textrm{cov}(a,X_k)
+\end{equation}
+
+\subsection{Dimensionality considerations}
+
+So far, we have only been considering a one-dimensional walk. What happens when an organism moves in multiple dimensions? Assuming that the choice of direction made in each dimension is independent, the MSD simply adds linearly. To see this, note that for a $D$ dimensional random walk, the MSD is given by:
+\begin{equation*}
+	MSD_{D}(t) = \sum\limits_{d=1}^{D}\big\langle(X_{d}(t)-X_{d}(0))^2\big\rangle
+\end{equation*}
+where $X_{d}(t)$ denotes the random variable for the value of the $d^{\textrm{th}}$ dimension of the position at time $t$. However, each term in the summation is simply the MSD of a one-dimensional walk along that dimension. Thus, we see that:
+\begin{equation*}
+	MSD_{D}(t) = \sum\limits_{d=1}^{D}MSD_{d}(t)
+\end{equation*}
+where $MSD_d(t)$ is the MSD for a one-dimensional random walk along the $d^{\textrm{th}}$ dimension at time $t$.
+
+\section{Introducing bias}
+
+In the random walk we have seen thus far, the organism is \textit{equally likely} to move either left or right at each time step. This process can also be written as:
+\begin{align}
+	\label{Bernoulli2}
+	X_{t+1} &= X_{t} + aY_t - a(1-Y_t)\nonumber\\
+	&= X_{t} + 2a(Y_t - \frac{1}{2})
+\end{align}
+where $Y_t$ is a Bernoulli($\frac{1}{2}$) random variable, i.e 
+\begin{equation*}
+	Y_t = 
+	\begin{cases}
+		1 & \textrm{with probability } \frac{1}{2}\\
+		0 & \textrm{with probability } \frac{1}{2}
+	\end{cases}
+\end{equation*}
+The \textit{final} position after $t$ time-steps will then be captured by a Binomial($t$,$\frac{1}{2}$) distribution, i.e. given $X_0 = 0$, we have:
+\begin{align}
+	\label{Bernoulli2_final}
+	X_{t} &= X_{0} + aZ_t - ta+aZ_t\nonumber\\
+	&=  2a(Z_t - \frac{t}{2})
+\end{align}
+where $Z_t \coloneqq \sum\limits_{i=1}^{t} Y_i \sim \textrm{Bin}(t,\frac{1}{2})$.
+What if the probabilities of moving left and right were \textit{not} equal? What if, instead, the organism moved left with probability $p$ and right with probability $q$ at each time step?\\
+We will reframe this process in terms of Equations \eqref{Bernoulli2} and \eqref{Bernoulli2_final} for analytical ease. Thus, the position at time $t+1$ given that the position at time $t$ is $X_t$ is given by:
+\begin{equation*}
+	X_{t+1} = X_{t} + 2a(Y_t - \frac{1}{2})
+\end{equation*}
+where, now, $Y_t \sim \textrm{Bernoulli}(p)$. Thus, using equation (10), the displacement after $t$ timesteps is given by:
+\begin{equation*}
+	D_{t} =  2a(Z - \frac{t}{2})
+\end{equation*}
+where $Z \sim \textrm{Bin}(t,p)$. The expected displacement is then given by:
+\begin{align}
+	\label{biased_D}
+	\big\langle D_t \big\rangle &= 2a(\big\langle Z_t\big\rangle - \frac{t}{2})\nonumber\\
+	&= 2at(p-\frac{1}{2})\nonumber\\
+	&= at(2p-1)\nonumber\\
+	&= at(p+(1-q)-1)\nonumber\\
+	&= at(p-q)
+\end{align}
+
+And the mean squared displacement is given by:
+\begin{align}
+	\label{biased_MSD}
+	MSD(t) &= 4a^2(\big\langle Z_{t}^2\big\rangle - t\big\langle Z_t\big\rangle + \frac{t^2}{4})\nonumber\\
+	&= 4a^2\left(\textrm{Var}(Z_t) + \big\langle Z_t\big\rangle^2 - t\big\langle Z_t\big\rangle + \frac{t^2}{4}\right)\nonumber\\
+	&= 4a^2\left(tp(1-p) + t^2p^2 - t^2p + \frac{t^2}{4}\right)\nonumber\\
+	&= 4a^2t\left(p^2(t-1)- p(t-1) + \frac{t}{4}\right)\nonumber\\
+	&= 4a^2t\left(p(p-1)(t-1)+\frac{t}{4}\right)\nonumber\\
+	&= 4a^2t\left(\frac{t}{4}-(t-1)pq\right)
+\end{align}
+
+Equation \eqref{biased_D} tells us that when the walk is biased, the mean displacement is non-zero, and is proportional to $t$ and to the `bias' $p-q$ of the process. The displacement is thus in the direction for which probability of movement in each time step is higher, as one would expect.
+
+\section{Rate of dispersion}
+
+How quickly can we expect an organism to `disperse' from its starting position? We say that a random walk has a dispersion rate of $\alpha$ if $MSD \propto t^{\alpha} $. Given actual data, $\alpha$ can be obtained by plotting $\textrm{log}(MSD)$ vs $\textrm{log}(t)$ and finding the slope of the line.\\
+\\
+From equations \eqref{unbiased_MSD} and \eqref{biased_MSD}, we see that for an unbiased random walk, $\alpha = 1$, and for a biased random walk, $\alpha = 2$. Thus, an organism executing a biased random walk moves away from its initial location `faster' than one executing an unbiased random walk. In general, processes with $\alpha \neq 1$ are said to exhibit `anomalous' diffusion. Processes with $\alpha < 1$ are said to be `sub-diffusive' and processes with $\alpha > 1$ are said to be `super-diffusive'. In the next class, we will see why the word `diffusion' is used here and how the discrete processes we have been studying here relate to the continuous process of diffusion.
+
+\chapter{The Diffusion Equation}
+
+Consider a very large number of organisms starting from the same point and executing an unbiased random walk. We would like to know what we would expect to see if we were to observe this system for a long time. Let $\phi(x,t)$ denote the number density of particles at position $x$ at time $t$. Consider a small time interval $\tau$, comparable to the length of a single time step of the random walk. We note that any particle that is at position $x$ at time $t$ must have either been there to begin with, or must have been somewhere else at time $t-\tau$ and moved a small distance $\delta x$ (small enough to be comparable to the step size of the random walk) to arrive at its current position. Thus, we can write:
+\begin{equation}
+	\label{derive_diff_eqn}
+	\phi(x,t+\tau) = \underbrace{\phi(x,t)}_{\substack{\text{Number of}\\ \text{particles}\\ \text{present at}\\\text{$x$}}} + \underbrace{\frac{1}{2}}_{\substack{\text{Probability of}\\ \text{entering $x$}\\ \text{from $x - \delta x$}}}\underbrace{(\phi(x-\delta x,t))}_{\substack{\text{Number of}\\ \text{particles}\\ \text{present at}\\ \text{$x-\delta x$}}} + \underbrace{\frac{1}{2}}_{\substack{\text{Probability of }\\ \text{entering $x$}\\ \text{from $x+\delta x$}}}\underbrace{(\phi(x+\delta x,t))}_{\substack{\text{Number of}\\ \text{particles}\\ \text{present at}\\ \text{$x + \delta x$}}} - \underbrace{\phi(x,t)}_{\substack{\text{Number of}\\ \text{particles}\\ \text{present at}\\ \text{$x$}}}\underbrace{(\frac{1}{2} + \frac{1}{2})}_{\substack{\text{Probability of}\\ \text{leaving $x$}}}
+\end{equation}
+Thus, we have:
+\begin{equation}
+	\label{DiffPrim}
+	\phi(x,t+\tau) - \phi(x,t) = \frac{1}{2}\left[\phi(x-\delta x,t) + \phi(x + \delta x,t) - 2\phi(x,t)\right]
+\end{equation}
+We can now Taylor expand the first two terms of equation \eqref{DiffPrim} as:
+\begin{align*}
+	\phi(x-\delta x,t) &= \phi(x,t) - \delta x \frac{\partial\phi}{\partial x} + \frac{(\delta x)^2}{2}\frac{\partial^2\phi}{\partial x^2} + \cdots\\
+	\phi(x+\delta x,t) &= \phi(x,t) + \delta x \frac{\partial\phi}{\partial x} + \frac{(\delta x)^2}{2}\frac{\partial^2\phi}{\partial x^2} + \cdots
+\end{align*}
+Thus, adding them together, we have:
+\begin{equation*}
+	\phi(x-\delta x,t) + \phi(x+\delta x,t) = 2\phi(x,t) + (\delta x)^2\frac{\partial^2\phi}{\partial x^2} + \mathcal{O}(4)
+\end{equation*}
+Neglecting 4th order terms and higher, we can now substitute this back into equation \eqref{DiffPrim} to obtain:
+\begin{equation*}
+	\phi(x,t+\tau) - \phi(x,t) = (\delta x)^2\frac{\partial^2\phi}{\partial x^2}
+\end{equation*}
+Dividing throughout by $\tau$, we arrive at:
+\begin{equation*}
+\frac{\phi(x,t+\tau) - \phi(x,t)}{\tau} = \frac{(\delta x)^2}{\tau}\frac{\partial^2\phi}{\partial x^2}
+\end{equation*}
+We now recall that both $\delta x$ and $\tau$ are very small. Thus, taking limits, we have
+\begin{equation*}
+	\lim\limits_{\tau \to 0} \frac{\phi(x,t+\tau) - \phi(x,t)}{\tau} = \lim\limits_{\tau \to 0\\\delta x \to 0}  \frac{(\delta x)^2}{\tau}\frac{\partial^2\phi}{\partial x^2}
+\end{equation*}
+Now, the left hand side of this equation is the definition of a derivative. For the right hand side, we recall that for a one-dimensional unbiased random walk, $MSD \propto t$. Thus, we would expect $\frac{(\delta x)^2}{\tau}$ to be a constant, since $\tau$ is of the order of a single time-step of the random walk. Defining the diffusion constant $D \coloneqq \frac{(\delta x)^2}{\tau}$, we arrive at:
+\begin{equation}
+	\label{FickLaw_1D}
+	\frac{\partial \phi(x,t)}{\partial t} = D\frac{\partial^2\phi(x,t)}{\partial x^2}
+\end{equation}
+or, in multiple dimensions,
+\begin{equation}
+	\label{FickLaw_3D}
+	\boxed{\frac{\partial \phi(\mathbf{r},t)}{\partial t} = D\nabla^2\phi(\mathbf{r},t)}
+\end{equation}
+Equation \eqref{FickLaw_3D} is the famous `diffusion equation' (sometimes also referred to as Fick's Law), and was historically used to model the diffusion of particles in a fluid. Thus, our derivation tells us that particles (or animals) that execute a random walk at a microscopic scale appear to behave like a diffusing fluid on macroscopic scales.
+
+\section{Typical Behavior of solutions to the diffusion equation}
+
+Suppose we have $N$ one-dimensional animals all starting out at the origin. Then, the initial density is given by $\phi(x,0) = \delta(x)$, where $\delta(x)$ is the dirac delta function given by:
+\begin{equation*}
+	\delta(x) = 
+	\begin{cases}
+		1 & x = 0\\
+		0 & \textrm{otherwise}
+	\end{cases}
+\end{equation*}
+The solution to equation \eqref{FickLaw_1D} given this initial condition is:
+\begin{equation*}
+	\phi(x,t) = N\sqrt{\frac{1}{4\pi D t}}e^{\frac{-x^2}{4Dt}}
+\end{equation*}
+This is the form of a Normal distribution. Specifically, the equation for $\phi(x,t)$ is in form of a $N(0,2Dt)$ distribution. Thus, we see that the number density of animals is given by a Gaussian centered at the origin, with the spread of the Gaussian increasing linearly with time. This confirms our intuition of what we would expect when we say particles `diffuse' from the focal point.
+
+\section{Introducing bias: The drift-diffusion equation}
+
+Instead of the unbiased population we have been considering so far, consider a population of one dimensional animals each of whom are executing a  move right with probability $p$ and move left with probability $q = 1-p$. How would the diffusion equation change in this case?
+Well, equation \eqref{derive_diff_eqn} still applies, but the probabilities of moving in from $x-\delta x$ and $x + \delta x$ are no longer half, but are instead given by $p$ and $q$ respectively. Thus, Taylor expanding as earlier, we arrive at:
+\begin{equation*}
+	\lim_{\tau \to 0}\frac{\phi(x,t+\tau) - \phi(x,t)}{\tau} = \lim_{\tau \to 0\\\delta x \to 0} \frac{(\delta x)^2}{\tau}\frac{\partial^2\phi}{\partial x^2} + (q-p)\frac{\delta x}{\tau}\frac{\partial \phi}{\partial x}
+\end{equation*}
+Defining $D = \lim\limits_{\tau \to 0} \frac{(\delta x)^2}{\tau}$ and $u = \lim\limits_{\tau \to 0} (q-p)\frac{\delta x}{\tau}$ , we arrive\footnote{The astute reader will notice that $\frac{\delta x}{\tau}$ and  $\frac{(\delta x)^2}{\tau}$ cannot really both simultaneously tend to non-zero constants. To make it work, we  say that we only look at weak drift ($q \to p$) so that $(q-p)\delta x /\tau$ and $(\delta x)^2/\tau$ both go to non-zero constants as $q\to p, \delta x \to 0, \tau \to 0$} at the `drift-diffusion equation':
+\begin{equation}
+	\label{diff_drift_1D}
+	\frac{\partial \phi(x,t)}{\partial t} = \underbrace{D_{p,q}\frac{\partial^2\phi(x,t)}{\partial x^2}}_{\text{``Diffusion"}} + \underbrace{u\frac{\partial \phi(x,t)}{\partial x}}_{\text{``Drift''}}
+\end{equation}
+or, in multiple spatial dimensions:
+\begin{equation}
+	\label{diff_drift_3D}
+	\boxed{\frac{\partial \phi(\mathbf{r},t)}{\partial t} = D_{p,q}\nabla^2\phi(\mathbf{r},t) + u\nabla\cdot\phi(\mathbf{r},t)}
+\end{equation}
+The `drift' term in equation \eqref{diff_drift_1D} adds a bias to the solutions, and this bias is proportional to $(q-p)$.
+
+\section{Typical behavior of solutions to the drift-diffusion equation}
+
+As before, consider an initial population of $N$ animals given by $\phi(x,0) = \delta(x)$. The solution to the drift-diffusion equation given this initial condition is:
+\begin{equation*}
+	\phi(x,t) = N\sqrt{\frac{1}{4\pi D t}}e^{\frac{-(x-ut)^2}{4Dt}}
+\end{equation*}
+As before, we have an ever-spreading Gaussian. However, this time, the mean of the Gaussian changes linearly with time. The solution is thus a `travelling wave' of ever-diminishing magnitude. The direction and speed of travel depend on the value of $q-p$, by the definition of $u$.

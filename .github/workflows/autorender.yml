@@ -1,0 +1,50 @@
+on:
+  workflow_dispatch:
+  push:
+    branches: main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: "Compile document"
+    permissions:
+      actions: write
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install TeX Live
+        run: |
+          sudo apt update
+          sudo apt install -y biber texlive-base texlive-latex-recommended texlive-latex-extra texlive-science
+
+      - name: Compile document
+        run: latexmk -pdflatex -interaction=nonstopmode -file-line-error EEB_Napkin.tex
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: EEB_Napkin.pdf
+          name: EEB_Napkin.pdf
+
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    name: "Deploy to GitHub Pages"
+    needs: build
+    permissions:
+      actions: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

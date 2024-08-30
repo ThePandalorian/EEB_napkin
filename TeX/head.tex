@@ -1,0 +1,293 @@
+%Packages
+
+%%%%%%%%%%%%%
+%Bibliography stuff
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{csquotes}
+\usepackage[
+sorting=nyc,
+backend=biber, %backend to use
+style=authoryear, %citation style
+uniquelist=false,
+natbib,
+block=ragged,
+maxcitenames=2,
+maxbibnames=99]{biblatex}
+
+
+%manually enumerate the bibliography even if using author-year
+% \defbibenvironment{bibliography}
+%   {\begin{enumerate}}
+	%   {\end{enumerate}}
+%   {\item}
+
+% Use last name, initial. unless this is non-unique. If this is non-unique, use full first name.
+%From https://tex.stackexchange.com/a/631580
+\DeclareNameFormat{always-init}{%
+	\ifnumequal{\value{uniquename}}{2}
+	{\usebibmacro{name:family-given}
+		{\namepartfamily}
+		{\namepartgiven}
+		{\namepartprefix}
+		{\namepartsuffix}}
+	{\usebibmacro{name:family-given}
+		{\namepartfamily}
+		{\namepartgiveni}
+		{\namepartprefix}
+		{\namepartsuffix}}%
+	\usebibmacro{name:andothers}}
+
+
+
+\DeclareNameAlias{author}{always-init}
+\DeclareNameAlias{editor}{always-init}
+
+\ExecuteBibliographyOptions{useprefix=true}
+\DeclareSortingNamekeyTemplate{
+	\keypart{\namepart{family}}
+	\keypart{\namepart{prefix}}
+	\keypart{\namepart{given}}
+	\keypart{\namepart{suffix}}}
+
+
+%Sort by name-year-cite order (biblatex default is to sort by name-year-title).
+\DeclareSortingTemplate{nyc}{
+	\sort{
+		\field{presort}
+	}
+	\sort[final]{
+		\field{sortkey}
+	}
+	\sort{
+		\field{sortname}
+		\field{author}
+		\field{editor}
+		\field{translator}
+		\field{sorttitle}
+		\field{title}
+	}
+	\sort{
+		\field{sortyear}
+		\field{year}
+	}
+	\sort{\citeorder}
+}
+
+%Clear some things I do not want going into the bibliography
+%from https://tex.stackexchange.com/a/89848
+\AtEveryBibitem{\clearfield{month}}
+\AtEveryBibitem{\clearfield{day}}
+\AtEveryBibitem{\clearfield{url}}
+\AtEveryBibitem{\clearfield{urlyear}}
+%\AtEveryBibitem{\clearfield{note}}
+
+
+%%%%%%%%%%%%%%%%
+%Add a new command for citing things with possesive apostrophe. For example, if I want to write:  Smith's (2023) big idea, the apostrophe needs to go after the author but before the year
+%From https://tex.stackexchange.com/a/537765
+%The relevant command is \posscite
+\DeclareNameWrapperFormat{labelname:poss}{#1's}
+
+\newrobustcmd*{\posscitealias}{%
+	\AtNextCite{%
+		\DeclareNameWrapperAlias{labelname}{labelname:poss}}}
+
+\newrobustcmd*{\posscite}{%
+	\posscitealias
+	\textcite}
+
+\newrobustcmd*{\Posscite}{\bibsentence\posscite}
+
+\newrobustcmd*{\posscites}{%
+	\posscitealias
+	\textcites}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{ragged2e} %for justifying text
+
+\usepackage{amsthm, amsmath, amssymb} % Mathematical typesetting
+\usepackage{mathrsfs} %fancy fonts for sigma-algebras
+\usepackage{physics} %some physics symbols
+\usepackage{float} % Improved interface for floating objects
+\usepackage{newfloat} % Declare your own custom floats
+\usepackage{graphicx, multicol} % Enhanced support for graphics
+\usepackage{xcolor} % Driver-independent color extensions
+\usepackage{framed}
+\usepackage[normalem]{ulem} %underlining
+\usepackage{listings}
+
+\usepackage[toc, title]{appendix} %Appendix
+
+
+\usepackage[labelfont=bf]{caption} %bold captions on figures and tables
+\usepackage{titlesec} %title formatting
+
+
+%%%%%%%%%%%%%
+%Math stuff
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{mathtools}
+\usepackage{multicol}
+\usepackage{color,soul}
+
+
+\usepackage{fancyhdr} %fancy headers
+\usepackage{afterpage}
+
+%%%%%%%%%%%%%
+%for tables
+\usepackage{makecell,tabularx}
+%\setlength{\extrarowheight}{12pt} %additive padding
+\renewcommand{\arraystretch}{2} %multiplicative padding 
+\renewcommand\theadfont{\small\bfseries}
+\usepackage{rotating}
+\usepackage{setspace}
+
+%For pseudocode
+\usepackage[boxed]{algorithm2e}
+\DontPrintSemicolon
+
+%For dummy text
+\usepackage{lipsum}
+
+
+%A bunch of definitions that make my life easier
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[section]
+\theoremstyle{definition}
+\newtheorem*{definition}{Definition}
+\newtheorem{example}{Example}
+\newtheorem*{note}{Note}
+\newtheorem*{claim}{Claim}
+\newtheorem*{lemma}{Lemma}
+\newcommand{\bproof}{\bigskip {\bf Proof. }}
+\newcommand{\eproof}{\hfill\qedsymbol}
+\newcommand{\Disp}{\displaystyle}
+\newcommand{\qe}{\hfill\(\bigtriangledown\)}
+\setlength{\columnseprule}{1 pt}
+
+\newcommand{\bignorm}[1]{\left\lVert#1\right\rVert} %for big norm symbol
+
+%for characters inside circles
+%syntax is \circled{character}
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+		\node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
+
+% Defines the `mycase` environment for cases in proofs
+\newcounter{cases}
+\newcounter{subcases}[cases]
+\newenvironment{mycase}
+{
+	\setcounter{cases}{0}
+	\setcounter{subcases}{0}
+	\newcommand{\case}
+	{
+		\stepcounter{cases}\textbf{Case \thecases.}
+	}
+	\newcommand{\subcase}
+	{
+		\par\indent\stepcounter{subcases}\textit{Subcase (\thesubcases):}
+	}
+}
+{
+	\par
+}
+\renewcommand*\thecases{\arabic{cases}}
+\renewcommand*\thesubcases{\roman{subcases}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%For easily making figures
+%syntax is:
+%\myfig{scaling_factor}{name_of_file}{caption}{label}
+\newcommand{\myfig}[4]{\begin{figure}[H]\centering \begin{center} \includegraphics[width=#1\textwidth]{#2} \caption{#3} \label{#4} \end{center} \end{figure}}
+
+% horizontal line across the page
+\newcommand{\horz}{
+	\vspace{-.4in}
+	\begin{center}
+		\begin{tabular}{p{\textwidth}}\\
+			\hline
+		\end{tabular}
+	\end{center}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%for making a box
+%modified from https://stackoverflow.com/a/77034123
+\usepackage[most]{tcolorbox}
+
+\newtcolorbox[auto counter,]{fancybox}[3][]{
+	arc=5mm,
+	lower separated=false,
+	fonttitle=\bfseries,
+	colbacktitle=black!10,
+	coltitle=black,
+	colupper=black,
+	enhanced,
+	attach boxed title to top left={xshift=1.8cm,
+		yshift=-3mm},
+	colframe=black,
+	colback=black!10,
+	title=#2 \thetcbcounter : #3,#1,breakable}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Resize the summation symbol
+%syntax is \sum[size] 
+\newlength{\depthofsumsign}
+\setlength{\depthofsumsign}{\depthof{$\sum$}}
+\newlength{\totalheightofsumsign}
+\newlength{\heightanddepthofargument}
+\newcommand{\bigsum}[1][1.4]{% only for \displaystyle
+	\mathop{%
+		\raisebox
+		{-#1\depthofsumsign+1\depthofsumsign}
+		{\scalebox
+			{#1}
+			{$\displaystyle\sum$}%
+		}
+	}
+}
+
+%Add a custom strut to increase vertical space given to equations when combining with underbrace
+%from https://tex.stackexchange.com/a/13864
+\newcommand*\mystrut[1]{\vrule width0pt height0pt depth#1\relax}
+
+
+%for cross-referencing between files
+%from https://tex.stackexchange.com/a/14365
+\usepackage{xr-hyper}
+
+%overleaf needs some extra hacks to work with the xr and xr-hyper packages.
+%from https://www.overleaf.com/learn/how-to/Cross_referencing_with_the_xr_package_in_Overleaf for overleaf specific
+%instructions
+\makeatletter
+\newcommand*{\addFileDependency}[1]{% argument=file name and extension
+	\typeout{(#1)}% latexmk will find this if $recorder=0
+	% however, in that case, it will ignore #1 if it is a .aux or 
+	% .pdf file etc and it exists! If it doesn't exist, it will appear 
+	% in the list of dependents regardless)
+	%
+	% Write the following if you want it to appear in \listfiles 
+	% --- although not really necessary and latexmk doesn't use this
+	%
+	\@addtofilelist{#1}
+	%
+	% latexmk will find this message if #1 doesn't exist (yet)
+	\IfFileExists{#1}{}{\typeout{No file #1.}}
+}\makeatother
+
+\newcommand*{\myexternaldocument}[1]{%
+	\externaldocument{#1}%
+	\addFileDependency{#1.tex}%
+	\addFileDependency{#1.aux}%
+}
+
+%hyperref should be imported AFTER xr-hyper
+\usepackage[final, colorlinks = true, 
+linkcolor = black, 
+citecolor = black,
+filecolor = black,
+hypertexnames = false,
+breaklinks=true]{hyperref} % For hyperlinks in the PDF

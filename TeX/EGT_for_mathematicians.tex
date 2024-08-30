@@ -1,0 +1,227 @@
+\chapter{Evolutionary game theory for mathematicians}\label{background_EGT}
+Nature is full of situations in which the fitness of organisms is frequency-dependent, in the sense that the `fitness payoff' to an individual adopting a `strategy' depends on the strategies adopted by other individuals in the population. Evolutionary game theory tries to capture the dynamics of such systems using a class of models called `evolutionary games'. Below, I will present (without proof) some notions and results from evolutionary game theory. Proofs of the results can be found in~\cite{broom_game-theoretical_2022} and sources cited therein.
+
+\section{Games, strategies, and populations}
+\definition{\emph{(Evolutionary Game)}}{ An $n$-player evolutionary evolutionary game is a collection $\{S_1,\cdots,S_n;g_1,\cdots,g_n\}$ of sets $S_i$ and functions $g_i:(S_1 \times S_2 \times \cdots \times S_n) \to \mathbb{R}$. $S_i$ is called the pure strategy set available to player $i$, and $g_i:(x_1,\cdots,x_n)\mapsto g_i(x_1,\cdots,x_n)$ is called the payoff function for player $i$ when player $j$ is playing strategy $x_j \in S_j$.}
+Unless specified otherwise, we will assume that every player has access to the same set of pure strategies, in which case the evolutionary game can be characterized by the collection $(S,G)$, where $S$ is the pure strategy set and $G:(S\times S \times \cdots \times S) \to \mathbb{R}$ is the payoff function.
+Thus, the game $(S,G)$ is modelling a situation in which every organism must choose some action from a set $S$, and the net benefit, or `payoff', of every action in $S$ is determined by the function $G$. We will in our discussion here restrict ourselves to the situation in which $S$ is finite\footnote{In general, $S$ need not be finite or even countable, it only needs to be measurable. In this setting, we must be careful with assigning payoffs and probabilities, and generally proceed by identifying a suitable $\sigma$-algebra $\mathcal{F}$ of $S$ over which to analyze the game (for example, if $S$ is also a topological space, the space of Borel sets of $S$ is usually a good choice). Then, each mixed strategy is a probability measure $\mu \in \mathbb{M}$ on $(S,\mathcal{F})$, payoffs are $\mu$-measurable real functions, and average payoffs are in terms of Lebesgue integrals over $(S,\mathcal{F},\mathbb{M})$. This more general setting is tricky to handle and is likely overkill for our sake, so we stick to cases where $S$ is a finite set and everything is `nice'.}. The finiteness of the pure strategy set is meant to model situations in which organisms have to `choose' between $m$ distinct, discrete alternatives.
+If $S$ is a finite set $S = \{S_1,\cdots,S_m\}$, we say that the game is played on $m$ `pure' strategies. But what does this mean? What exactly does it mean to adopt a strategy?
+
+\definition{\emph{(Strategy) }}{Given a game with pure strategy set $S = \{S_1,\cdots,S_m\}$, A \textit{strategy} is defined as a probability vector $p =  (p_1,\cdots,p_m)$ such that a player playing strategy $p$ plays $S_i \in S$ with probability $p_i$. A player playing strategy $p$ is called a $p$-player. Note that given a set of $m$ pure strategies, all strategies lie on the $m$-simplex $\Delta^{m}=\{(x_1,\cdots,x_m):x_i > 0, \sum\limits_{i=1}^{m} x_i = 1\}$}. This is sometimes called the strategy simplex.
+\definition{\emph{(Support of a strategy)}}{ The \textit{support} of a strategy $p$ is the set of indices of non-zero elements of $p$, \textit{i.e} $\textrm{supp}(p) = \{i:p_i > 0\}$.}
+
+\definition{\emph{(Pure and mixed strategies)}}{ Let $p \in \Delta^{m}$ be a strategy. If $|\textrm{supp}(p)| = 1$, we say that $p$ is a pure strategy, and otherwise, we say that $p$ is a mixed strategy. If $p$ uses every pure strategy (\textit{i.e} $p_i > 0 \ \forall \ i$, or $|\textrm{supp}(p)|=|S|=m$), we say that $p$ is an internal strategy, since it is in the interior of $\Delta^m$.}\\
+\\
+In biology, we are generally interested in a population of individuals, all of which are playing some game. Thus, we are interested in the payoff for an individual in a particular population. This idea is made precise below.
+
+\definition{\emph{(Population)}}{ We will use $\delta_{p}$ to represent a population in which a randomly chosen player is almost surely a $p$-player. Note that we can write any population $\Pi$ as $\Pi = \sum\delta_{S_i}p_i$, where each $S_i$ is a pure strategy, and the probability of encountering an $S_i$-player is $p_i$. Unless otherwise specified, we will assume that populations are well-mixed and infinitely large.}\\
+\\
+We will use $\mathbb{E}[p;\Pi]$ to denote the expected payoff of a $p$-player in a population $\Pi$. When modeling dynamics, this is usually assumed to be equivalent (up to a constant) to the fitness of $p$-players in a population $\Pi$.\\
+\\
+The most well-known evolutionary games are matrix games, $i.e$ games for which one can define a (fixed) payoff matrix $A$ such that for any strategy $p$ in any population $\delta_q$, the expected payoff can be written as $\mathbb{E}[p;\delta_{q}]=qAp^T$. Note that this is equivalent to assuming that individuals are engaged in pairwise contests. Furthermore, note that $\mathbb{E}$ is linear in both $p$ and $q$. However, in many biologically relevant games, one cannot make this assumption. A more general class of evolutionary games are the so-called `playing-the-field' games, in which an organism is envisioned as playing against the population `as a whole'. This notion is made precise below.
+
+\definition{\emph{(Playing the field)}}{ An evolutionary game is said to be a playing-the-field game if for any strategy $p=(p_1,\cdots,p_n)$ in any population $\Pi$, we can write
+	\begin{equation*}
+		\mathbb{E}[p;\Pi] = \sum\limits_{i=1}^{n}p_{i}f_i(\Pi)
+	\end{equation*}
+	where each $f_i:\Delta^{n}\to\mathbb{R}$ can be any (fixed) nonlinear function.
+}\\
+\\
+Note that in playing-the-field games, $\mathbb{E}$ is linear in the focal player's strategy $p$, but need not be linear in the population strategy $q$. It is also clear that every matrix game with payoff matrix $A = (a_{ij})_{n\times n}$ is a playing-the-field game, with $f_i(q) = \sum\limits_{j=1}^{n}a_{ji}q_j = (A^Tq^T)_i$. Playing-the-field games are thus one of the two natural ways to try and generalize matrix games to model more varied biological phenomena\footnote{the other being to make payoffs linear in the population strategy but not the player strategy. My admittedly limited understanding is that this latter approach has found lesser applicability}
+
+\section{Nash Equilibria, ESSs, and associated results}\label{subsection_NE_and_ESS}
+I will now define two important notions which will characterize the types of strategies we are interested in.
+\definition{\emph{(Nash Equilibrium)}}{ Consider a game on $n$ strategies. A strategy $p^{*}$ is said to be a \textit{Nash equilibrium} for the game if:
+	\begin{equation*}
+		\mathbb{E}[p^*;\delta_{p^*}] \geq \mathbb{E}[q;\delta_{p^*}] \ \forall \ q \neq p^* \in \Delta^{n}
+	\end{equation*}
+}\label{def_NE}
+This definition is saying that if $p^*$ is a Nash equilibrium, then no $q$-player can do better than a $p^*$-player in a population of (almost surely) $p^*$-players, unless $q=p^*$. However, in evolutionary game theory, this is not a strong enough condition. We are generally interested in a stronger notion that allows for the possibility of small `invasions' of other `mutant' strategies that occur with \textit{non-zero} probability.
+\definition{\emph{(ESS)}}{ Consider a game on $n$ strategies. A strategy $p^*$ is said to be an \textit{evolutionarily stable strategy (ESS)} for the game if $\forall \ q \neq p^* \in \Delta^{n} \ \exists \ \epsilon_q > 0$ such that:
+	\begin{equation*}
+		\mathbb{E}[p^*;(1-\epsilon)\delta_{p^*}+\epsilon\delta_q] >  \mathbb{E}[q;(1-\epsilon)\delta_{p^*}+\epsilon\delta_q] \ \forall \ \epsilon \in (0,\epsilon_q)
+\end{equation*}}
+Thus, if $p^*$ is an ESS, it is \textit{strictly} better than any other strategy $q$ when the population is comprised mostly of $p^*$-players, with some sufficiently small fraction $\epsilon$ of `mutant' $q$ players. Note that given any ESS $p^*$ and any strategy $q \neq p^*$, by taking the limit $\epsilon \to 0$ in the definition of an ESS, we see that $\mathbb{E}[p^*;\delta_{p^*}] \geq \mathbb{E}[q;\delta_{p^*}]$. Thus, if a strategy is an ESS, it must also be a Nash equilibrium.\\
+Below, I will list some results pertaining to ESSs.
+\begin{theorem}{\emph{(Characterization)}}\label{characterization}
+	Let $h_{p,q,u}$ be the function\footnote{$h_{p,q,u}$ is often called the `incentive function', since it can be interpreted as the `incentive' of switching from strategy $q$ to strategy $p$ in a population where a fraction $u$ of the individuals are $q$-players and the rest are $p$-players.}:
+	\begin{equation*}
+		h_{p,q,u} = \mathbb{E}[p;(1-u)\delta_p+u\delta_q] - \mathbb{E}[q;(1-u)\delta_p+u\delta_q]
+	\end{equation*}
+	If $h_{p,q,u}$ is differentiable with respect to u at $u=0$ for every $p,q \in \Delta^{n}$, then $p$ is an ESS iff for every $q \neq p$, the following are true\footnote{condition 1 is often called the `equilibrium condition', and condition 2 is often called the `stability condition'. Maynard Smith, working only with matrix games, originally defined the notion of an ESS using these two criteria, with the stability condition as $\mathbb{E}[p;\delta_p]=\mathbb{E}[q;\delta_p] \Rightarrow \mathbb{E}[p;\delta_q]>\mathbb{E}[q;\delta_q]$. This characterization in terms of the incentive function shows that our definition in terms of $\epsilon$s generalizes his original definition.}:
+	\begin{enumerate}
+		\item $\mathbb{E}[p;\delta_p] \geq \mathbb{E}[q;\delta_p]$
+		\item If $\mathbb{E}[p;\delta_p] = \mathbb{E}[q;\delta_p]$, then
+		\begin{equation*}
+			\frac{\partial h_{p,q,u}}{\partial u}\bigg{|}_{u=0} > 0
+		\end{equation*}
+	\end{enumerate}
+\end{theorem}
+%\begin{theorem}\emph{(Performance of pure strategies in the %support)}
+%Consider a game in which $\mathbb{E}$ is linear in the focal player strategy and $h_{p,q,u}$ is differentiable at $0$ for every $p,q$. Let $p^*$ be an ESS. Then, $\mathbb{E}[S_i;\delta_{p^*}]=\mathbb{E}[p^*;\delta_{p^*}]$ for any $i \in \textrm{supp}(p^*)$.
+%\end{theorem}
+%In other words, any pure strategy that is in the support of an ESS performs just as well as the ESS itself in a population almost surely consisting of just the ESS.
+How else can we identify ESSs? The following theorem examines
+how an ESS behaves when playing against strategies that are `very close' to the ESS.
+\begin{theorem}\emph{(Local superiority)}
+	\label{local_superiority}
+	Consider a playing-the-field game on $n$ strategies. $p$ is an ESS for this game iff $\exists \ \epsilon > 0$ s.t. 
+	\begin{equation*}
+		\mathbb{E}[p;\delta_q] > \mathbb{E}[q;\delta_q] \ \forall \ q \neq p \in B_{n}(p,\epsilon) \subseteq \Delta^{n}
+	\end{equation*}
+	where $B_{n}(p,\epsilon)$ is the $n$-dimensional ball with radius $\epsilon$ centered at $p$.
+\end{theorem}
+This theorem says that in the case of playing-the-field games, $p$ is an ESS if and only if it is `locally superior', in the sense that if one considers any strategy $q$ that is sufficiently similar to $p$, then $p$ performs (strictly) better than $q$ in a population of $q$-players.
+Sometimes, finding several ESSs is much easier if you already know that a certain strategy must be an ESS. In the case of matrix games (\textit{i.e} games for which you can write down a constant payoff matrix), the following theorem is extremely useful:
+
+\begin{theorem}\emph{(Bishop-Cannings theorem)}
+	Consider a matrix game with pure strategies $S_1,\cdots,S_n$. Let $p$ be an ESS for this game. Let $T(p)$ be the set of indices of all pure strategies which have the same payoff against $p$ as $p$ has against itself, \textit{i.e} $T = \{i \ : \ \mathbb{E}[S_i,p]=\mathbb{E}[p,p]\}$. Then, if $q$ is any strategy such that $\textrm{supp}(q) \subseteq T(p)$, $q$ is not an ESS for the matrix game.
+\end{theorem}
+
+Thus, given a single ESS, the Bishop-Cannings theorem dictates that certain other strategies cannot also be ESSs. This greatly reduces the total number of possible ESSs in matrix games, and thus helps analyze such models. For example, an immediate and powerful corollary of the Bishop-Cannings theorem is the following:
+
+\begin{corollary}\emph{(Uniqueness of the internal ESS)}
+	If an internal strategy $p$ is an ESS for a matrix game, then it is the only ESS for that game.
+\end{corollary}
+
+Thus, in the case of matrix games, it is sufficient to find a \textit{single} internal ESS, since the Bishop-Cannings theorem will then ensure that this ESS is unique. 
+
+\section{Replicator dynamics and the folk theorem}
+
+Often, we are not interested in particular strategies, but are instead interested in predicting the fate of a given strategy in  a given population of individuals. For any game, if one assumes that the fitness of a strategy in a population is given by its expected payoff, then the population dynamics are given by the associated `replicator equation' on $\Delta^n$:
+\begin{equation}
+	\label{replicator}
+	\dot{p_i} = p_i(\pi_i(\mathbf{p})-\bar{\pi}(\mathbf{p}))
+\end{equation}
+where $\mathbf{p(t)}=(p_1(t),\cdots,p_n(t)) \in \Delta^m$ is the strategy vector that we are tracking, $\pi_i(\mathbf{p}) = \mathbb{E}[S_i;\sum\limits_{i=1}^{n} p_i\delta_{S_i}]$ is the expected payoff of an $S_i$-player in a population where the probability of encountering an $S_i$-player is $p_i$, and $\bar{\pi}(\mathbf{p}) = \sum\limits_{i=1}^{n}p_i\pi_i(\mathbf{p})$ is the average payoff/fitness of the population.\\
+Equation \eqref{replicator} defines a system of $n$ coupled ODEs, which has always has a unique solution\footnote{Assuming all functions are `nice': Specifically, we require that each $\pi_i$ is Lipschitz continuous in $\Delta^n$. In almost all practical cases, this will be satisfied.} given an initial condition $\mathbf{p}(0)=\mathbf{p}_{0}$. Biologically, we are interested in stable fixed points, \textit{i.e.} points $\mathbf{p^*}$ at which $\dot{p^{*}_i} = 0 \ \forall \ i$ and trajectories which are `close enough' to $\mathbf{p^*}$ converge to $\mathbf{p^*}$. If we were to find such points, then we could reason that populations which contain such a mix of individuals will maintain them forever, even in the face of small perturbations from the fixed point (due to, say, mutations or invasions from other populations). In the case of matrix games, the following theorems prove very useful and provide a connection between replicator dynamics and the notions introduced in section \ref{subsection_NE_and_ESS}:
+\begin{theorem}\emph{(Folk theorem of evolutionary game theory) }
+	If $p$ is an ESS for a matrix game, then $p$ is also a locally asympotically stable fixed point for the replicator dynamics associated with that game. Further, if $p^*$ is any fixed point for the replicator equations such that it is also the limit of at least one interior trajectory\footnote{\textit{i.e} $\exists \ p_0 \ \in int(\Delta^n) \ \textrm{s.t.} \ p(0) = p_0 \ \Rightarrow \lim\limits_{t\to\infty}p(t)=p^*$. Alternatively, it is also sufficient if the fixed point $p^*$ is instead Lyapunov stable}, then $p^*$ must be a Nash equilibrium for that game. In particular, every stable fixed point for the replicator dynamics is a Nash equilibrium for the game.
+\end{theorem}
+\begin{theorem}\emph{(Zeeman, 1980) }
+	If $p$ is an internal ESS for a matrix game, then it is a global attractor for the associated replicator equation in $\textrm{int}(\Delta^n)$, \textit{i.e} every trajectory that starts within the interior of $\Delta^n$ converges to $p$.
+\end{theorem}
+Thus, in the case of matrix games, these theorems along with the Bishop-Cannings theorem tell us that identifying ESSs and Nash equilibria lets us characterize almost all the interesting properties of the game that we are interested in. This is why ESSs have played such a central role in evolutionary game theory. The first part of the Folk theorem (ESS $\Rightarrow$ stable fixed point) also holds for playing-the-field games (though the other results presented here do not). It is thus desirable to seek out ESSs even when trying to analyze a playing-the-field game.
+
+\section{An example: The ideal free distribution as an evolutionary game}
+
+The ideal free distribution was first formulated by Fretwell and Lucas in 1970 to study the distribution of birds in patchy environments. Fretwell and Lucas considered an environment with $n$ patches of unequal resources, where the $i$\textsuperscript{th} patch had resources of value $B_i$. Without loss of generality, we can renumber the patches such that $B_1 > B_2 > \cdots > B_n$. They further assumed that the value of the resource to each individual in the $i$\textsuperscript{th} patch was dependent on the interspecific competition on the $i$\textsuperscript{th} patch, which they modeled using a continuous increasing function $f_i(x_i)$, where $x_i$ is the density of individuals on the $i$\textsuperscript{th} patch, and $f_i(0) = 0$. Then, the net of the $i$\textsuperscript{th} patch when the $i$\textsuperscript{th} patch has a population density of $x_i$ is given by:
+\begin{equation}
+	\label{original_IFD}
+	R_i(x_i) = B_i - f_i(x_i)
+\end{equation}
+They further assumed that individuals had complete knowledge of the value of every patch, that individuals were free to move from patch to patch with no cost, and that individuals moved between patches in order to maximize the net benefit $R_i$. Under these conditions, Fretwell and Lucas reasoned as follows: For any given organism in a given patch, if moving to any other patch would have been better for this individual, it would immediately do so. Thus, the only way to attain an `equilibrium' is if the organism \textit{cannot do any better} in any other patch than it is currently doing in the patch that it is on. Further, this should be true for every organism, and thus in every patch. This leads us to the conclusion that we require $R_1 = R_2 = \cdots = R_n$ if every patch is occupied. If only some number $l < n$ of patches are occupied at equilibrium, then these patches must be the ones with the $l$ greatest values of $B_i$, and we instead require $R_1 = R_2 = \cdots = R_l \geq B_{l+1} \geq B_{l+2} \geq \cdots \geq B_n$, since no patches past the $l$\textsuperscript{th} patch are occupied and patches are arranged in descending order of $B_i$. They dubbed such a distribution the `ideal free distribution' (IFD), and were able to study some properties of such a distribution.
+
+\subsection{The game-theoretic perspective: A habitat selection game}
+This idea of a scenario in which no organism can do better by moving to a different patch should immediately have you thinking of definition \ref{def_NE}. In fact, even though Fretwell and Lucas were unaware of this, it was quickly established that the IFD is likely a Nash Equilibrium for a cleverly defined game. In the early 2000s, Cressman, Krivan, and other game theorists defined the following `habitat selection game':
+\definition{\emph{(Habitat selection game)} }{ Define a game on $n$ pure strategies where the $i$\textsuperscript{th} pure strategy $S_i$ is to stay on the $i$\textsuperscript{th} patch, and where the payoff of the $i$\textsuperscript{th} pure strategy in a population $(x_1,\cdots,x_n)$ given by $R_i = B_i - f_i(x_i)$. This game is called the `habitat selection game'.}
+\\
+In the habitat selection game, the expected payoff of a strategy $p$ in a population $\Pi=\sum q_i\delta_{S_i}$ is given by:
+\begin{equation}
+	\label{IFD_exp_payoff}
+	\mathbb{E}[p;\Pi] = \sum\limits_{i=1}^{n}p_i(B_i-f_i(q_i))
+\end{equation}
+Note that this is linear in $p$ (but not necessarily linear in $\Pi$), and the habitat selection game is thus a playing-the-field game. In this new game-theoretic framework, we have the following definition:
+\definition{\emph{(IFD strategy)} }{\label{def_IFD_strategy}A strategy $p$ for the habitat selection game on $n$ pure strategies is said to be an IFD strategy if there exists $l \leq n$ such that:
+	\begin{enumerate}
+		\item $p_i > 0 \iff i \leq l$
+		\item $R_1 = R_2 = \cdots = R_l \geq B_{l+1} \geq \cdots \geq B_n$
+\end{enumerate}}
+This puts the IFD that Fretwell and Lucas recognized in game-theoretic terms. Though the game-theoretic aspect of the original IFD as proposed by Fretwell and Lucas was implicitly recognized for a long time, it was only in 2006 that the habitat selection game was defined, and it was proved both that the IFD is in fact an ESS for the habitat selection game, and that \textit{any} ESS for the habitat selection game must be an IFD strategy. We state and prove this as a theorem below.
+\begin{theorem}\emph{(Cressman \textit{et al.}, 2006)}\label{theorem_original_IFD}
+	A strategy $p$ is an ESS for the habitat selection game iff it is an IFD strategy.
+\end{theorem}
+\begin{proof}
+	Assume that $p= (p_i)_i$ is an ESS for the habitat selection game. We will prove that it is an IFD, \textit{i.e} that it satisfies both criteria listed in  definition \ref{def_IFD_strategy}.\\
+	To see that it satisfies the first criterion, assume the contrary, \textit{i.e.} that there exist $j < k \leq n$ such that $p_j = 0$ and $p_k > 0$. Then, 
+	
+	\begin{equation}
+		\label{ESS_to_IFD_1}
+		R_j = B_j - 0 = B_j \geq B_k > B_k - f_k(p_k) = R_k
+	\end{equation}
+	Define $\Tilde{p}$ as:
+	\begin{equation*}
+		\Tilde{p}_i = \begin{cases}
+			p_i & i \neq j,k \\
+			p_k & i = j\\
+			p_j & i = k
+		\end{cases}
+	\end{equation*}
+	Thus, $p_l = \Tilde{p}_l$ everywhere except at $j$ and $k$, where the values are switched. The incentive function $h_{p,\Tilde{p},0}$ is given by:
+	\begin{equation*}
+		h_{p,\Tilde{p},0} = \mathbb{E}[p;\delta_p] - \mathbb{E}[\Tilde{p};\delta_p]
+	\end{equation*}
+	Using equation \eqref{IFD_exp_payoff}, we get:
+	\begin{align*}
+		h_{p,\Tilde{p},0} &= \sum\limits_{i=1}^{n}(p_i-\Tilde{p}_i)(R_i)\\
+		&= -\Tilde{p}_jR_j + p_kR_k\\
+	\end{align*}
+	But since $\Tilde{p}_j = p_k$, using equation \eqref{ESS_to_IFD_1}, we get:
+	\begin{equation*}
+		h_{p,\Tilde{p},0} = p_k(R_k-R_j) < 0
+	\end{equation*}
+	which contradicts the necessary part of theorem \ref{characterization}, thus yielding a contradiction. If payoffs of the occupied patches are unequal, \textit{i.e} if there exist $j,k \leq l$ such that $R_j > R_k$, we can similarly define
+	\begin{equation*}
+		\Tilde{p}_i = \begin{cases}
+			p_i & i \neq j,k \\
+			p_j + p_k & i = j\\
+			0 & i = k
+		\end{cases}
+	\end{equation*}
+	to yield the same contradiction, by following the same steps. Lastly, if $l$ patches are occupied in the population and there are $j \leq l < k$ with $R_l < B_k$, we can define
+	\begin{equation*}
+		\Tilde{p}_i = \begin{cases}
+			p_i & i \neq j,k \\
+			p_k & i = j\\
+			p_j & i = k
+		\end{cases}
+	\end{equation*}
+	to arrive at a contradiction through the same steps, leading us to the conclusion that $R_1 = \cdots = R_l \geq B_{l+1} \cdots B_n$. We have thus proved that every ESS is an IFD strategy. We will now prove the converse.\\
+	\\
+	Assume that $p=(p_i)_i$ is an IFD strategy with $l$ patches occupied. We will use the local superiority property to prove that $p$ is an ESS. Consider any strategy $q \neq p$.
+	\\
+	\\
+	\begin{mycase}
+		\case All patches are occupied in the IFD (\textit{i.e} $l = n$)
+		\begin{quote}
+			Let $R_1=\cdots=R_n=R^*$. We have:
+			\begin{align}
+				\sum\limits_{i=1}^{n}(p_i-q_i)(B_i-f_i(p_i)) &= \sum\limits_{i=1}^{n}(p_i-q_i)R_i(p)\\
+				&= R^*\sum\limits_{i=1}^{n}(p_i-q_i)\nonumber\\
+				&= R^*(\sum\limits_{i=1}^{n}p_i-\sum\limits_{i=1}^{n}q_i)\nonumber\\
+				&= R^*(1-1) = 0\label{IFD_to_ESS_zero_sum}
+			\end{align}
+			Now, consider the quantity $\mathbb{E}[p;\delta_q]-\mathbb{E}[q;\delta_q]$. Subtracting the LHS of \eqref{IFD_to_ESS_zero_sum} from this, we have:
+			\begin{align}
+				\mathbb{E}[p;\delta_q]-\mathbb{E}[q;\delta_q] &= \sum\limits_{i=1}^{n}(p_i-q_i)(B_i-f_i(q_i))\nonumber\\
+				&= \sum\limits_{i=1}^{n}(p_i-q_i)(B_i-f_i(q_i))- \sum\limits_{i=1}^{n}(p_i-q_i)(B_i-f_i(p_i))\nonumber\\
+				&= \sum\limits_{i=1}^{n}(p_i-q_i)(f_i(p_i)-f_i(q_i))\label{IFD_to_ESS_local_sup}
+			\end{align}
+			By definition, each $f_i$ is assumed to be a strictly increasing function. It is easy to see that this implies that $(p_i-q_i)(f_i(p_i)-f_i(q_i))>0 \ \forall \ i$. Using this in \eqref{IFD_to_ESS_local_sup}, we see that $\mathbb{E}[p;\delta_q]-\mathbb{E}[q;\delta_q] > 0 \ \forall \ q \neq p$. Thus, $p$ is locally superior, and by the necessary part of theorem \ref{local_superiority}, it must be an ESS.
+		\end{quote}
+		\case Some patches are unoccupied in the IFD (\textit{i.e} $l<n$)
+		\\
+		\begin{quote}
+			Let $R_1=\cdots=R_l=R^*$. As before, we examine the quantity:
+			\begin{align}
+				\sum\limits_{i=1}^{n}(p_i-q_i)(B_i-f_i(p_i)) &= \sum\limits_{i=1}^{l}(p_i-q_i)(B_i-f_i(p_i)) + \sum\limits_{i=l+1}^{n}(p_i-q_i)(B_i-f_i(p_i))\nonumber\\
+				&= \sum\limits_{i=1}^{l}(p_i-q_i)R^* - \sum\limits_{i=l+1}^{n}q_iB_i\label{IFD_to_ESS_case_2_ineq_1}
+			\end{align}
+			Where the last equality comes from the definition of an IFD strategy on $l$ patches as having $p_i > 0 \iff i \leq l$ and the definition of each $f_i$ as satisfying $f_i(0)=0$. Using the fact that $R^* \geq B_k \ \forall k > l$ in \ref{IFD_to_ESS_case_2_ineq_1}, we now get:
+			\begin{align*}
+				\sum\limits_{i=1}^{n}(p_i-q_i)(B_i-f_i(p_i)) &\geq \sum\limits_{i=1}^{l}(p_i-q_i)R^* - \sum\limits_{i=l+1}^{n}q_iR^*\\
+				&= R^*(\sum\limits_{i=1}^{n}p_i - \sum\limits_{i=1}^{n}q_i)\\
+				&= R^*(1-1) = 0
+			\end{align*}
+			We can now proceed as in case 1 and write
+			\begin{align*}
+				\mathbb{E}[p;\delta_q]-\mathbb{E}[q;\delta_q] &= \sum\limits_{i=1}^{n}(p_i-q_i)(B_i-f_i(q_i))\\
+				&> \sum\limits_{i=1}^{n}(p_i-q_i)(B_i-f_i(q_i))- \sum\limits_{i=1}^{n}(p_i-q_i)(B_i-f_i(p_i))\\
+				&= \sum\limits_{i=1}^{n}(p_i-q_i)(f_i(p_i)-f_i(q_i)) \\
+				&\geq 0 \ \forall \ q \neq p \ \ (\because \textrm{every $f_i$ is increasing)}
+			\end{align*}
+			and thus, $p$ is locally superior and therefore an ESS by theorem \ref{local_superiority}. This concludes our proof.
+		\end{quote}
+	\end{mycase}
+\end{proof}
+Thus, for the habitat selection game as defined above, every ESS is an IFD strategy, and every IFD strategy is an ESS. It is also possible to prove that for the game defined above, there is a single unique ESS (and thus IFD). The habitat selection game and the IFD concept have been extended in various directions, such as to include multiple species (each with a different $B_i$ and $f_i$ set), migration dynamics, costs to migration, and incomplete information. 

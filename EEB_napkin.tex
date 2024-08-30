@@ -1,0 +1,61 @@
+\documentclass[12pt,twoside]{report}
+\usepackage{fullpage}
+
+\input{TeX/head.tex} %some useful packages and custom commands
+
+\addbibresource{bibliography/refs.bib} %this file contains the bibliography
+
+
+\usepackage{subfiles}
+\title{An EEB Napkin}
+\author{Ananda Shikhara Bhat}
+\begin{document}
+	\begin{titlepage}
+		\begin{center}
+			\vspace*{-1.5cm}
+			
+			\Huge
+			\textbf{An EEB theory Napkin}
+			
+			\vspace{0.5cm}
+			\Large
+			An attempt to construct Evan Chen's \href{https://web.evanchen.cc/napkin.html}{Infinitely Large Napkin} for theoretical population biology
+			
+			\noindent\includegraphics[width=0.75\textwidth]{figures/logistic_bifurcation.png}
+			
+			\large
+			\vspace{-0.2cm}\text{Ananda Shikhara Bhat}
+		\end{center}
+	\end{titlepage}
+	\tableofcontents
+	\part{Evolution in finite populations}
+	\include{TeX/b_d_proceses}
+	\part{Spatial ecology and random walks}
+	\include{TeX/random_walks_and_diffusion_approximations}
+	\include{TeX/Turing_instabilities}
+	\part{Evolutionary Game theory and adaptive dynamics}
+	\include{TeX/EGT_for_mathematicians}
+	\include{TeX/Adaptive_diversification_intro}
+%Bibliography
+
+%Ask the bibliography headers to say 'References' 
+\cleardoublepage
+\fancyhead[CO]{\rule[-4ex]{0pt}{4ex}\footnotesize\itshape References}
+%Add the phantomsection so that hyperref knows where to go
+\cleardoublepage
+\phantomsection
+\vspace*{1.3cm}
+%Add a title for the bibliography
+{\noindent\fontsize{23}{60} \textbf{References}}
+%Add an entry in the table of contents
+\addcontentsline{toc}{part}{References}
+%Change the font for the bibliography
+\renewcommand*{\bibfont}{\footnotesize}	
+%Typeset the bibliography little differently using ragged2e
+\begingroup
+\RaggedRight
+\vspace{5ex}
+%Add the bibliography
+\printbibliography[heading=none]
+\endgroup
+\end{document}
