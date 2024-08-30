@@ -5,7 +5,6 @@
 *.bcf
 *.blg
 *.lof
-*.log
 *.lot
 *.out
 *.run.xml
@@ -16,7 +15,6 @@
 /TeX/*.bcf
 /TeX/*.blg
 /TeX/*.lof
-/TeX/*.log
 /TeX/*.lot
 /TeX/*.out
 /TeX/*.run.xml
