@@ -19,6 +19,12 @@ jobs:
           sudo apt update
           sudo apt install -y biber texlive-base texlive-latex-recommended texlive-latex-extra texlive-science
 
+      - name: Install latexmk
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: |
+            latexmk
+
       - name: Compile document
         run: latexmk -pdflatex -interaction=nonstopmode -file-line-error EEB_Napkin.tex
 
