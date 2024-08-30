@@ -15,6 +15,7 @@
 /TeX/*.bcf
 /TeX/*.blg
 /TeX/*.lof
+/TeX/*.log
 /TeX/*.lot
 /TeX/*.out
 /TeX/*.run.xml

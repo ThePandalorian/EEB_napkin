@@ -25,4 +25,4 @@ With theoretical ecology and evolutionary biology, a very similar problem arises
 > And then it’s 1PM, people need to go places, and I can’t help but think:
 > _<span style="color:red;">Man, if I had forty hours instead of forty minutes, I bet I could actually have explained this all.</span>_ 
 
-This is my attempt at including some basic notions from evolutionary theory on a napkin.
+This is my attempt at including some basic notions from evolutionary theory on a napkin. The compiled PDF can be accessed [here](https://thepandalorian.github.io/EEB_napkin/EEB_napkin.pdf).

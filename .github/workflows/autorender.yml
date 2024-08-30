@@ -35,7 +35,7 @@ jobs:
 
           cp EEB_napkin.log dist/
           cp EEB_napkin.pdf dist/
-          cp figures/*.png dist/figures/
+          cp -r figures dist/figures/
 
           cd dist
           tree -H '.' -I "index.html" -D --charset utf-8 --filesfirst -T "the EEB napkin: All Generated Files" >index.html
