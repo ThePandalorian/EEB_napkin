@@ -26,15 +26,15 @@ jobs:
             latexmk
 
       - name: Compile document
-        run: latexmk -pdflatex -interaction=nonstopmode -file-line-error EEB_Napkin.tex
+        run: latexmk -pdflatex -interaction=nonstopmode -file-line-error EEB_napkin.tex
 
       - name: Create dist folder
         run: |
           mkdir -p dist
           mkdir -p dist/figures
 
-          cp EEB_Napkin.log dist/
-          cp EEB_Napkin.pdf dist/
+          cp EEB_napkin.log dist/
+          cp EEB_napkin.pdf dist/
           cp figures/*.png dist/figures/
 
       - name: Setup Pages
@@ -43,8 +43,8 @@ jobs:
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
-          path: EEB_Napkin.pdf
-          name: EEB_Napkin.pdf
+          path: EEB_napkin.pdf
+          name: EEB_napkin.pdf
       
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
