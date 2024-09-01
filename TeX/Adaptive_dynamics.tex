@@ -1,0 +1,372 @@
+\textbf{Note: This chapter is from Gaurav Athreya's Master's thesis~\citep{athreya_thesis_2023}}
+
+\chapter{Adaptive Dynamics}
+
+
+{\color{red}TODO: add general intro text here}
+
+In an unstructured population (no life-stages, no spatial structure, etc.) the use-cases of this framework may be built up in complexity as follows
+\begin{itemize} \itemsep -1mm
+	\item one type with one evolving trait
+	\item one type with several evolving traits
+	\item several interacting types each with one evolving trait each
+	\item several interacting types with several evolving traits each
+\end{itemize}  
+
+In each case, two things must be clear to the reader by the end of this document: how to actually compute invasion fitness, and then how to analyse the evolutionary dynamics induced by an invasion fitness function. 
+
+\section{Adaptive dynamics for a one-dimensional trait}
+\label{section:1-dim-AD}
+
+Consider a trait taking values in $T \subset \mathbb{R}$ and an asexual population monomorphic for this trait. We define the \emph{fitness} of a strategy as its long-term exponential growth rate in a given environment. 
+In particular, suppose $r(x, E_x)$ denotes the fitness of a phenotype $x$ in an environment $E_x$ consisting of constant abiotic factors and other $x$ individuals.
+When $x$ is a demographic attractor (e.g. a fixed point), $r(x, E_x) = 0$ since the population abundances do not change and hence the growth rate is zero. 
+Now consider a rare mutant phenotype $y$ that arises in a background resident population having equilibrium phenotype $x$.  
+As long as the mutant is rare, it does not have an appreciable effect on the environment and its fitness is hence $r(y, E_x)$. 
+For convenience we shall denote this quantity by $f(x,y)$, and call it the \textit{invasion fitness} of mutant $y$ in a resident population of $x$. 
+We assume that this function is sufficiently smooth in both coordinates. 
+
+\subsection{Analytic classification of singular points}
+
+If $f(x,y)>0$, the mutant can spread but might go to extinction due to small-size stochastic extinction. 
+If $f(x,y)<0$, it will die out. 
+If $f(x,y)>0$ and $f(y,x)<0$, then the mutant can spread but the resident cannot recover when rare itself. 
+In fact, it has been shown that it is usually enough that $f(x,y)>0$ for the mutant $y$ to invade \textit{and} fix -- sometimes called ``invasion implies substitution".  
+Therefore, it is sufficient to just check when $f(x,y)>0$.
+For complicated functional forms, the evolutionary dynamics is determined by the derivative of $f(x,y)$, also known as the \textit{fitness gradient}. 
+This is because to first order, the fitness can be expressed as 
+\begin{align}
+	f(x,y) = \left. \frac{\partial f}{\partial y} \right|_{y=x} (y-x)
+\end{align}
+where $f(x,x) = 0$ by assumption. 
+So the population evolves i.e., trait changes until it reaches a point where the fitness gradient is zero. 
+Recall that the trait value of the population is changing by invasion of mutants which have positive invasion fitness. 
+Such points are called evolutionarily singular points. 
+We will now consider what happens when the population gets to (if it can) a singular point. 
+One of the major virtues of the adaptive dynamics framework is that it differentiates explicitly between two different kinds of stability: evolutionary stability and convergence stability. 
+As we will see, these are mutually exclusive and can occur in any combination. 
+
+\begin{definition}
+	A singular point $x^*$ is said to be locally evolutionarily stable if it cannot be invaded by any nearby strategy i.e., $f(x,y)<0$ for all $y$ in some neighbourhood around $x$. 
+\end{definition}
+Local evolutionarily stable points are traps in the sense that a population cannot escape from such a point via small mutations. 
+It is easy to see that this is equivalent to the condition that the trait value $x^*$ is a (local) maximum for the function $f(x,y)$ in the mutant, $y$ direction. 
+Evolutionary stable singular points are therefore characterized by 
+\begin{align}
+	\left. \frac{\partial^2 f}{\partial y^2} \right|_{y=x^*} < 0
+\end{align}
+Now for notational convenience, let us define 
+\[
+D(x) = \left. \frac{\partial f}{\partial y} \right|_{y=x}
+\]
+\begin{definition}
+	A singular point $x^*$ is said to be \textit{convergence stable} if a population can reach the neighbourhood of $x^*$ i.e., (monomorphic) populations closer to the singular point can replace those farther away. 
+	More formally, for any point $x<x^*$ in a neighbourhood around $x^*, f(x,y)>0 \ \forall y \in (x,x^*)$ and similarly, for any $x>x^*$ in a neighbourhood around $x^*, f(x,y)>0 \ \forall y \in (x^*,x)$. 
+\end{definition}
+In other words, the fitness gradient points toward the singular point. Since the fitness gradient must change sign from positive to negative, $D(x)$ must be a decreasing function and so at a convergence stable singular point, we must have 
+\begin{align}
+	\left. \frac{d}{dx} D(x) \right|_{x=x^*} < 0 
+\end{align} 
+Note that there is a relation between the conditions for convergence and evolutionary stability
+\begin{align}
+	\frac{dD(x)}{dx} = \frac{\partial^2 f}{\partial x \partial y} + \frac{\partial^2 f}{\partial y^2}
+	\label{eqn: selection-gradient-1D}
+\end{align}
+where one can see that convergence stability requires the evaluation of the additional term on the left. 
+Note here the important role of the assumption that mutations are not infinitesimal - if one were to assume that, a population would never actually reach a convergence stable point.
+
+The immediately important points in the trait space are those that are both convergence stable, and uninvadable.
+Such points are called evolutionary stable strategies (ESSs), and constitute endpoints for evolutionary trajectories since they can both be reached by a population starting far away in the trait space, and the population cannot be invaded once this trait has fixed. 
+
+An interesting case is to consider singular points which are convergence stable, but not evolutionarily stable. 
+What happens at such points? 
+The population can reach the point, but then it is susceptible to invasion by nearby mutants. 
+
+\begin{definition}
+	A \textit{protected polymorphism} is a polymorphic population in which none of the phenotypes can go extinct i.e., all have positive fitnesses when rare and therefore cannot be lost, and therefore none of them can fix. 
+\end{definition}
+
+After a small perturbation of a population of this type that is inevitable over the course of evolutionary time, we will have a resident that is slightly off the singular point, and a mutant that arises that is also off the singular strategy and has positive growth rate when rare. 
+This necessarily gives rise to a protected dimorphism since both populations can recover when rare. 
+We can show (see appendix 1 in \cite{geritz_evolutionarily_1998})  that such a population can be invaded only by mutants that are farther away from the singular strategy than the current population.
+This gives rise to a diverging population with two ``branches" that progressively become more separated from each other with time. 
+Such points i.e., those that are not evolutionarily stable but convergence stable, are known as branching points, and this phenomenon is termed \textit{evolutionary branching}.
+Trait divergence takes place until another singular point is reached, or until the local approximations used in the above characterizations no longer hold. 
+
+\subsection{Pairwise Invasibility Plots (PIPs) and graphical characterizations of singular points}
+
+The evolution of a population can be studied also by means of a pairwise invasibility plot, which is a two-dimensional plot of the sign of $f(x,y)$ as a function of $x$ and $y$. 
+In particular, the character of a singular point can be determined by the structure of `-' and `+' regions around it. 
+The graphical characterization of the above properties is as follows:
+\begin{enumerate}
+	\item A \textbf{singular point} can be identified on the PIP since it will be in the intersection between the zero-set of $f(x,y)$ and the line $y=x$ (since $f(x,x)=0 \ \forall \ x$). 
+	\item A singular point is \textbf{evolutionarily stable} if no mutant can invade it. Hence, the vertical line through it must be locally entirely within a `-' region. 
+	\item For characterizing convergence stable points, we will make use of the diagonal $y=x$. A singular point $x^*$ is \textbf{convergence stable} if
+	\begin{itemize}
+		\item to the left of $x^*$, the area above $y=x$ is locally inside a `+' region
+		\item to the right of $x^*$, the area below $y=x$ is locally inside a `+' region 
+	\end{itemize}   
+	\item \textbf{Continuously stable}: convergence stable and ESS, so (1), (2), (3)
+	\item \textbf{Branching point}: convergence stable and not ESS, so conditions (1), (3) and negation (2)
+\end{enumerate}
+
+The difference between these two notions of stability is now clear: convergence stability describes whether an evolving population can actually reach the singular point, whereas evolutionary stability describes the invadability of a population already at the point. From both the algebraic and the graphical characterizations, one can see that neither condition implies the other - a singular point can be any combination of convergence stable (or not) and evolutionarily stable (or not).  
+
+\section{Microscopic descriptions and a stochastic derivation of the canonical equation of adaptive dynamics}
+\label{section:microscopic-descriptions-CE}
+
+The canonical equation of adaptive dynamics (CE) is a dynamical system that describes the evolution of phenotypic traits in terms of the fitness gradient and the mutational processes that give rise to variation.
+\cite{dieckmann_dynamical_1996} showed that this (until then often heuristically invoked) equation has a solid foundation based in the microscopic interactions between individuals in the population.
+Specifically, the CE describes the mean trajectory of a directed random walk in the trait space, with birth and death rates determined by the ecological processes operating in the population. 
+In this section, we describe the underlying stochastic process, and derive the CE using the master equation for this stochastic process along with certain smoothness assumptions. 
+
+Evolutionary dynamics takes place over long timescales, where we make all the simplifying assumptions stated above. 
+Over shorter timescales, population dynamics is decided by ecological processes.
+The fate of a mutant is thus determined by the ecology of its interaction with the resident. 
+This is the link between the fitness of the previous section and mechanistic models of population dynamics - it is given by the growth rate of the mutant over ecological timescales. 
+
+Consider a population consisting of $N$ types of individuals, with their abundances given by $n = (n_1, ..., n_N)$. 
+Now consider a collection of traits $s = (s_1, ..., s_N)$ such that $s_i$ determines the birth and death rates of type $i$. 
+These traits may be, for example, related to beak morphology in a population of interacting finches.
+Due to the assumption that the ecological and evolutionary timescales are separated, this trait can be assumed to be constant for the ecological dynamics.  Then a general model of the population dynamics is given by 
+\begin{align}
+	\frac{dn_i}{dt} = (b_i(n) - d_i(n))  n_i \hspace{10mm} i = 1, ... , N
+	\label{eqn:bi-di-eqn-form}
+\end{align} 
+where $n$ is the vector of type abundances and $b_i$ and $d_i$ are the birth and death rates of each type. 
+We say the combined quantity $b_i-d_i$ is the \textit{growth rate}. 
+Note that we have explicitly allowed the birth and death rates to be frequency dependent.
+
+There is a corresponding stochastic process for the evolution of the traits $s$ that can be constructed given any model for short-timescale population dynamics of the above form. 
+This is a continuous-time random walk on the state space $\mathcal{S}$ given by the Cartesian product of the state space of each $s_i$. 
+Stochasticity in the trait value is due to mutation of the trait, and demographic stochasticity - small mutant populations may die out purely due to size. 
+We assume that selection pressures only depend on this trait; it is always true that they depend only on the present value of a trait.
+Mutation also depends only on the present value. 
+The process can therefore be assumed to be Markovian, simplifying the analysis.
+
+The time-evolution of the probability distribution is described by the master equation
+\begin{align}
+	\frac{d}{dt}P(s,t) = \int_ \mathcal{S} [P(s',t)w(s|s') - P(s,t)w(s'|s)] ds'
+\end{align}
+which basically measures flux into and out of the trait value $s$. 
+The transition function $w(s_1|s_2)$ is determined by the composition and ecology of the population. 
+Now, we give an expression for the transition function in terms of the transitions in each trait: we assume that no two species can simultaneously undergo a trait substitution in the infinitesimal time $dt$. 
+Therefore, we can write
+\begin{align}
+	w(s'|s) = \sum_{i=1}^N w_i(s_i'|s) \prod_{j \ne i} \delta(s_j'-s_j)
+\end{align}
+In other words, add - for each $i$ - the probability of $s_i$ transitioning to $s_i'$ when all the other traits stay unchanged i.e.,  $s_j' (j \ne i)$ are still equal to $s_j$.
+Next, we must derive an expression for the single trait transition functions $w_i(s'|s)$.
+For this, we assume that mutation and selection are independent, so the probability per unit time $w_i$ for a specific trait substitution is given by the probability per unit time $\mathfrak{M}_i$ that the mutant is generated by an individual of the population times the probability $\mathfrak{S}_i$ that it successfully escapes size-related stochastic extinction. 
+\begin{align}
+	w(s_i'|s) = \mathfrak{S}_i (s_i',s) \mathfrak{M}_i (s_i',s)
+\end{align}
+We can then write expressions for the probabilities above in terms of previously defined quantities like the birth and death rates, equilibrium population size, and mutation distribution~\citep{dieckmann_dynamical_1996}.
+
+Now define the average path
+\begin{align}
+	\left< s\right>(t) = \int_{\mathcal{S}} sP(s,t)ds 
+\end{align}
+Using the master equation, the Fubini-Tonelli theorem, and the Leibniz rule, we can write
+\begin{align}
+	\frac{d}{dt} \left< s \right> = \int \int (s'-s)w(s'|s) P(s,t)ds'ds
+\end{align}
+We now introduce the $k$th jump moment $a_k = (a_{k1},...,a_{kN})$ with 
+\begin{align}
+	a_{ki} = \int (s_i'-s_i)^k w(s_i'|s_i)ds_i'
+\end{align}
+Then we can write 
+\begin{align}
+	\frac{d}{dt}\left< s \right> = \left< a_1(s) \right>(t)
+\end{align}
+We linearize the first jump moment i.e., assuming it is twice differentiable, take only the linear term in the Taylor series and ignore the higher order terms. 
+WLOG calling the linear part by the same name, we can say 
+\begin{align}
+	\frac{d}{dt}\left< s \right> =  a_1(\left< s \right>)(t)
+\end{align}
+Now we call the mean path variable by a different name $x$ for convenience. Substituting the exact expressions for $\mathfrak{S}_i$  and $\mathfrak{M}_i$ and Taylor-expanding the fitness term to first degree, we get
+\begin{align}
+	\frac{dx_i}{dt} = \frac{1}{2} \mu_i(x_i) \sigma^2_i(x_i) \hat{n}_i(x) \frac{\partial \bar{f}_i}{\partial x_i'} \hspace{10mm} i=1,....,N
+\end{align}
+where $\mu_i(x_i)$ is the fraction of births in the population that give rise to mutations in type $i$, $\sigma^2_i(x_i)$ is the variance of the mutation distribution, $ \hat{n}_i(x)$ is the equilibrium population at the trait value $x$, $\bar{f}_i$ is the time-averaged growth rate, which is equal to $f(s, \hat{n}(s))$. 
+This is the canonical equation of adaptive dynamics. 
+This shows that the right notion of fitness for the mutant is its average growth rate $\bar{f}_i = \left. b_i(n)-d_i(n) \right|_{n=n^*} $ when rare in a resident population at equilibrium.
+If the traits under considering for each type number more than one each, some changes need to be made to the above equation. 
+Let the fitness of type $i$ now be determined by $v_i$ traits. 
+Firstly, $\sigma^2_i(x_i)$ now becomes the variance-covariance matrix of the mutation distribution. 
+Secondly, the fitness gradient  $\frac{\partial \bar{f}_i}{\partial x_i'}$ now becomes the multidimensional gradient $\nabla_i'f(x_i',x)$.  Therefore, the multi-dimensional CE is given by
+\begin{align}
+	\frac{dx_i}{dt} = \frac{1}{2} \mu_i(x_i) \sigma^2_i(x_i) \hat{n}_i(x) \nabla_i'f(x_i',x) \hspace{10mm} i=1,....,N
+\end{align}
+where the right hand side is a column vector of length $v_i$ - each element describing the CE for one of the $v_i$ traits - since $\sigma^2$ is $v_i \times v_i$ and $\nabla_i'f(x_i',x)$ being $v_i \times 1$. 
+
+\section{General procedure for evolutionary invasion analysis}
+\label{section:general-invasion-analysis}
+
+One of the most important properties of adaptive dynamics is the relative ease with which ecological dynamics can be incorporated into the evolutionary process. 
+In the past two sections, we understood how to study the evolutionary dynamics described by an invasion fitness function.
+We did not, however, state how this function may be derived in the most general sense.
+The only special case we saw is equations of the form \eqref{eqn:bi-di-eqn-form}.
+There is a method to derive an invasion fitness when the ecology, or population dynamics, is given by an arbitrary set of ODEs, and describing this method is the goal of this section.
+The presentation here follows that of \cite{otto_biologists_2007}. 
+
+Consider a coevolutionary community of $N$ types, each with trait vector $x_i$ of possibly different lengths. 
+Let the population abundance of type $i$ be $n_i$ and let $n$ be the vector of abundances of all types. 
+Let the short-timescale population dynamics of this community be described by a system of differential equations 
+\begin{align}
+	\frac{dn_i}{dt} = g_i(x_i,n)
+\end{align}
+The dependence on $n$ is generic frequency-dependence and the dependence on $x_i$ arises via the effect of the traits on growth rates, interaction coefficients, etc. 
+
+The first step is to determine equilibria of the resident population and conditions under which the equilibria are stable. 
+We restrict ourselves here to the case of a single attracting equilibrium. 
+Furthermore, we work only in the parameter regime where this equilibrium is stable so as to ensure that the resident equilibrium is reached before the mutant arises, and to ensure that mutants that die out don't drive the resident to extinction as well. 
+
+First we introduce the mutant into the resident population at equilibrium - mathematically, this is performed by augmenting the above system with additional variables and dynamical equations. 
+Note that it is not necessary that the addition of one mutant type must lead to exactly one additional equation - it might be the case that multiple, independent variables need to be tracked even when one mutant type is present.  
+In general, exactly how this augmentation is done depends on the specifics of the model. 
+One sanity check is that the augmented model must have an equilibrium where the mutant is absent and the resident is at the abundances in the equilibrium found above. 
+Now we compute the Jacobian for this augmented model to understand the local stability. 
+If we index the resident types before the mutant types, this matrix must have the following form 
+\[
+\begin{bmatrix}
+	\mathbf{J_r} & \mathbf{U} \\
+	\mathbf{0} & \mathbf{J_m}
+\end{bmatrix}
+\]
+where $\mathbf{J_r}$ is the Jacobian of the initial model and $\mathbf{J_m}$ is the submatrix corresponding to the rows and columns of the Jacobian for the mutant type. 
+The invasion fitness of this mutant is defined as the leading real part of the eigenvalues of this whole matrix, evaluated at the mutant-free resident equilibrium. 
+If it is positive, the mutant invades; if it is negative, the mutant goes to extinction.
+Since the matrix is block-upper-triangular, it is sufficient to compute the eigenvalues only of $\mathbf{J_r}$ and $\mathbf{J_m}$.
+Further, since we started with a resident population that is at a \textit{stable} equilibrium, the real parts of all eigenvalues of $\mathbf{J_r}$ must be negative.
+It is hence sufficient to narrow even more and compute only the real parts of the eigenvalues of $\mathbf{J_m}$ and find the largest one.   
+
+Once we have obtained the expression for the invasion fitness, the procedure is clear: we find the singular points, ask when they are locally uninvadable and when they are convergence stable. 
+In this way, we may identify evolutionary endpoints, points that lead to polymorphisms, etc.
+
+\section{Multi-dimensional adaptive dynamics}
+\label{section:multi-dim-AD}
+
+
+The method for analysing the invasion fitness function when there is just one trait is clear from section \ref{section:1-dim-AD}. 
+However, how is convergence stability and invadability decided when there are an arbitrary number of species each having an arbitrary number of traits? 
+In this section, we shall present some answers to this question and their caveats.
+This section will follow the presentation in \cite{leimar_multidimensional_2009}. 
+
+Consider a community of $N$ co-evolving species or types. 
+Let $x_k$ be the vector of traits of type $k$. 
+Let $\mathcal{S}_k$ be the trait space of type $k$ which is a Cartesian product of the trait spaces of each of its individual traits.
+The traits of the full community then live in the product of all the $\mathcal{S}_k$, which we shall call $\mathbb{S}$.
+Note that the different $x_k$ do not necessarily have the same length. 
+We will henceforth use primed variables to denote mutants - for example, $x_k'$ will denote the trait vector of a mutant of type $k$. 
+Let $F_k(x_k',x)$ be the invasion fitness functions of a mutant of type $k$ in the environment generated by a community with species having traits $x = (x_1,...,x_N)^T$.
+The primary object of study in this section is the collection of invasion fitness functions $(F_k)_k$ that arise from the scenarios of a mutant of each species $k$ in the community being generated. 
+
+Before the biological considerations, some mathematical preliminaries: We shall henceforth call a matrix $M$ positive (resp. semi)definite if the matrix $(M+M^T)/2$ is positive (resp. semi)definite i.e. has all eigenvalues greater than (resp. or equal to) zero. 
+The same shall be true for the term ``negative (semi)definite".
+
+
+First let us start with the condition for invasion. 
+Again, we assume that the resident population is at equilibrium.
+A mutant of type $k$ invades if $F_k(x_k',x)>0$. 
+Ideally, we would like to consider general conditions when this ineqaulity holds, but for mathematical tractability we consider only small mutational deviations i.e., $x_k'$ close to $x_k$.
+This allows the truncation of a Taylor expansion to first order in $x_k'$:
+\begin{align}
+	F_k(x_k',x) = F_k(x_k,x) + (x_k'-x_k)^T \left. \nabla_k' F_k(x_k,x) \right|_{x_k'=x_k} + o(||x_k'-x_k||^2)
+\end{align}
+where the gradient is taken with respect to the mutant trait variables of type $k$. 
+Locally, a mutant has positive invasion fitness if the scalar product $(x_k'-x_k)^T \left. \nabla_k' F_k(x_k,x) \right|_{x_k'=x_k}$ is positive since the first term is zero because $x_k$ is a resident trait at equilibrium and the growth rate at equilibrium is zero. 
+This gradient is the multi-dimensional analogue to the selection gradient of previous sections and we will continue to use developed terminology as appropriate.
+
+Singular points are now points $x$ where the fitness gradients of \textit{all} types are zero. 
+Similarly generalizing, a singular point is uninvadable if it is a local maximum of the invasion fitness function in the direction of the mutant variables. 
+Around a singular point, the invasion fitness of species $k$ has the Taylor expansion
+\begin{align}
+	F_k(x_k',x_k) = \frac{1}{2}(x_k'-x_k)^T \mathbf{H}_{kk} (x_k'-x_k) + o(||x_k'-x_k||^3)
+\end{align}
+where the matrix $\mathbf{H}_{kk}$ is the Hessian of the invasion fitness function, sometimes called the selection Hessian, and is given by
+\begin{align}
+	(\mathbf{H}_{kk})_{ij} = \left. \frac{\partial^2 F_k(x_k',x)}{\partial x_{ki}' \partial x_{kj}'} 
+	\right|_{x_k'=x_k,x=x^*}
+\end{align}
+where $x_{ki}$ is the $i$th trait of species $k$. 
+For a point $x^*$ to be a local maximum in the mutant direction and hence uninvadable, it is sufficient that all the selection Hessians are negative definite and necessary that they are negative semidefinite. 
+
+For questions of convergence stability, we must ask when mutations closer to the singular point than the resident are always more fit. We will need to recall the canonical equation for multiple species from section (\ref{section:microscopic-descriptions-CE}). It takes the form: 
+\begin{align}
+	\frac{dx_k}{dt} = \mathbf{B}(x) \nabla_k' F_k(x_k',x)
+\end{align}
+where $\mathbf{B}(x)$ comes from the statistical properties of the processes giving rise to mutations and $\nabla_k' F_k(x_k',x_k)$ is the selection gradient. 
+Note that $x_k$, the evolving phenotype of type $k$, may itself be a vector of traits.
+We will further simplify this equation by linearising it for small values of the mutational increment $x_k'-x_k$. 
+The selection gradient has, in the vicinity of a singular point, Taylor expansion of the form
+\begin{align}
+	\nabla' F(x,x^*) = \mathbf{J}(x - x^*) + \text{higher order terms}
+\end{align}
+where $\mathbf{J}$ is the Jacobian of the selection gradient taken with respect to all trait variables and evaluated at the singular point. The Jacobian is of the form
+\begin{align}
+	\mathbf{J} = \mathbf{H} + \mathbf{Q}
+\end{align}
+where $\mathbf{H}$ is a block diagonal matrix of order $|\mathbb{S}|$, with the diagonal blocks being the species $k$ selection Hessians $\mathbf{H}_{kk}$, which are of order $|\mathcal{S}_k|$. 
+The matrix $\mathbf{Q}$ is a matrix of order $|\mathbb{S}|$ but has blocks $\mathbf{Q}_{kl}$ with elements given by
+\begin{align}
+	(\mathbf{Q}_{kl})_{ij} = \left. \frac{\partial^2 F_k(x_k',x)}{\partial x_{ki}'  \partial x_{lj}} \right|_{x_k'=x_k,x=x^*}
+\end{align}
+This is a matrix of mixed partial derivatives - mixed between derivates with respect to mutant and resident variables, and the most recent equation is the multi-dimensional analogue of \ref{eqn: selection-gradient-1D}. 
+Now if we set $\mathbf{A}=\mathbf{B}(x^*)$, the linearized canonical equation is 
+\begin{align}
+	\frac{dx}{dt} = \mathbf{AJ}(x-x^*)
+\end{align}
+Note that it makes sense to linearise the canonical equation only if the mutational increments are considerably smaller than the range around a singular point where the linearisation is an acceptable approximation of the non-approximated equation.
+
+We can define convergence stability to varying degrees of strength. 
+Here, inspired by an observation in the one-dimensional case, we shall consider \textit{strong} convergence stability.
+A singular point is strong convergence stable if it is an asymptotically stable fixed point of the canonical equation for any mutational process given by a smoothly varying, symmetric, positive definite $\mathbf{A}=\mathbf{B}(x^*)$.
+If there are multiple species, we can broaden the class of mutational matrices since there cannot be any interspecific genetic correlations in mutation.
+
+Now more concretely, a singular point is stable if all eigenvalues of $\mathbf{AJ}$ have negative real parts and unstable if at least one eigenvalue has positive real part. 
+Therefore, if we restrict $\mathbf{A}$ to be in the above ``nice" class of matrices, we can derive conditions dependent only on the matrix $\mathbf{J}$. 
+We shall state a simple result here for illustration, more complications can be found in \cite{leimar_multidimensional_2009}.
+In particular, for a single species with multiple traits, it is sufficient that $\mathbf{J}(x^*)$ is negative definite, whereas if it is not negative semidefinite, there is some mutational matrix $\mathbf{A}$ for which the point is an unstable equilibrium of the canonical equation. 
+
+For multiple co-evolving species, it is slightly different.
+We must only consider mutational matrices which are smoothly varying, symmetric, positive definite, but also block matrices, since there cannot be genetic correlations between traits of different species.
+See the original paper \citep{leimar_multidimensional_2009} for more details. 
+
+\section{Summary}
+\label{section:summary}
+
+We now compile all the information outlined in the above paragraphs and give an outline. 
+To apply the adaptive dynamics framework to a problem, it is necessary to first compute the invasion fitness of all possible mutants, and then analyse these invasion fitnesses for uninvadability, convergence stability, branching, etc. 
+The invasion fitnesses for any problem can be computed using the general method for invasion analysis given in Section \ref{section:general-invasion-analysis}. 
+
+The analysis of the invasion fitnesses differs greatly in difficulty across the different classes of problems: for one evolving species with any number of traits, the analysis is fairly simple - if there is only one trait involved, Section \ref{section:1-dim-AD} is all one needs. 
+However, if more than one trait is involved, the criteria for convergence stability become more involved. 
+Uninvadability is relatively straightforward in all cases. 
+If there are multiple co-evolving species, as before, singular points and uninvadability are conceptually easy to calculate. 
+However, there does not exist a clean condition for convergence stability - see Section \ref{section:multi-dim-AD}.  
+
+Lastly, the evolutionary trajectory taken by a trait can be computed via the canonical equation of adaptive dynamics, which is described and derived in Section \ref{section:microscopic-descriptions-CE}.
+Some conditions have straightforward interpretations in terms of basic concepts in dynamical systems theory - for example, singular points are fixed points of the canonical equation, convergence stable points are asymptotic attractors of the canonical equation.
+This gives a full picture of the dynamics of the trait under consideration.
+
+\section{Limitations of adaptive dynamics}
+\label{section:limitations}
+
+Most limitations of adaptive dynamics can be traced to its main assumptions - the assumption of small mutations, asexual reproduction, or of rare mutations. These assumptions allow us to study evolutionary dynamics in some detail, but it is important to understand where adaptive dynamics fails and cannot be applied. 
+
+Consider first the assumption of small mutations - more precisely, mutations of small phenotypic effect. 
+Estimated distributions of mutational effect show that there are mutations of both small and large effect -- this empirical finding complicates the picture portrayed by the predictions of adaptive dynamics. 
+It can also be shown that if all evolution proceeds only by mutations of small effect, then evolution is very slow.
+The main argument for the central role of small effect mutations is that given by Fisher - the probability that a mutation is deleterious increases with the number of evolving traits being considered. 
+Real biological systems have many evolving traits and thus most mutations of large effect are deleterious.
+Since we are assuming that the population is large, any deleterious mutation is driven to extinction, and thus does not affect the trait substitution sequence of adaptive dynamics.
+The separation of timescales between ecological and evolutionary processes induced by the assumption of rare mutations is also not generally applicable.
+In microbial communities for example, ecological and evolutionary processes overlap since ecological interactions are mediated by secreted chemicals that can persist for several generations. 
+One of the other main limitations of adaptive dynamics is that it cannot model sexual populations and thus cannot comment on the origin of biological species, which needs reproductive isolation. 
+Adaptive dynamics can however can identify when disruptive selection evolves via branching points. 
+So while branching points aren't necessarily the origin of new species, they are causes for the origin of polymorphism which may then lead to speciation via sex-related processes.
+
+More generally, there have also been calls for adaptive dynamics to make testable predictions so that they can be compared against empirical data \citep{waxman_20_2005}. 
+In conclusion, these caveats make it clear that adaptive dynamics is not meant to provide quantitatively precise predictions of evolution.
+It is however useful to obtain a preliminary, intuitive understanding of evolutionary processes, and this is how it must be made use of.

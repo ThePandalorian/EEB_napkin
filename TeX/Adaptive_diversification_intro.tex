@@ -70,7 +70,7 @@ A slightly more general approach to adaptive diversification is to relax the ass
 \begin{equation*}
 	\frac{\partial \phi(u)}{\partial t} = F(u,\phi(u),t)
 \end{equation*}
-In PDE models, diversification shows up as patterns (in the Turing sense, as covered in Chapter \ref{chap_Turing}), and the existence of a polymorphism corresponds to a multimodal solution for $\phi(x)$. The functional form of $F$ is often formulated through biological principles. For example, in analogy to the logistic equation, one could postulate the continuous version:
+In PDE models, diversification shows up as patterns (in the Turing sense, as will be covered in Chapter \ref{chap_Turing}), and the existence of a polymorphism corresponds to a multimodal solution for $\phi(x)$. The functional form of $F$ is often formulated through biological principles. For example, in analogy to the logistic equation, one could postulate the continuous version:
 \begin{equation}
 	\label{cts_logistic}
 	\frac{\partial \phi(u)}{\partial t} = r\phi(u)\left(1 - \frac{\phi(u)}{K(u)}\int\limits_{\mathcal{T}}\alpha(u,v)\phi(v)dv\right)
@@ -89,7 +89,7 @@ PDE models sacrifice interpretability for increased generality. While these mode
 
 \section{Stochastic individual-based models}
 
-The most general approach to modelling adaptive diversification is through individual-based models. In such models, birth rates, death rates, and interaction rules are specified for each individual, and system-level properties are observed by letting the system evolve. Tools such as the Gillespie algorithm are useful here in order to effectively implement simulations. Here, one can include all sorts of complications if they want, and view the outcome. This affords flexibility that PDE models and the classic invasion fitness approach do not, but also leads to even less interpretability. In theory, IbMs can be analyzed as stochastic processes using the ideas covered in chapter \ref{chap_1D_processes}, though depending on the model, the mathematics could get very complicated. As such, depending on complexity, in many cases, IbMs may be best viewed (in my opinion) as in silico `experiments'.
+The most general approach to modelling adaptive diversification is through individual-based models. In such models, birth rates, death rates, and interaction rules are specified for each individual, and system-level properties are observed by letting the system evolve. Tools such as the Gillespie algorithm are useful here in order to effectively implement simulations. Here, one can include all sorts of complications if they want, and view the outcome. This affords flexibility that PDE models and the classic invasion fitness approach do not, but also leads to even less interpretability. In theory, IbMs can be analyzed as stochastic processes using ideas that we will cover in chapter \ref{chap_1D_processes}, though depending on the model, the mathematics could get very complicated. As such, depending on complexity, in many cases, IbMs may be best viewed (in my opinion) as in silico `experiments'.
 
 \section{An example of a prediction of adaptive diversification}
 
