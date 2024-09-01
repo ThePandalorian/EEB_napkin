@@ -2,10 +2,10 @@
 
 \chapter{Adaptive Dynamics}
 
-\textbf{Note: This chapter is from Gaurav Athreya's Master's thesis~\citep{athreya_thesis_2023}}
+\textbf{Note: This chapter is taken almost verbatim from Gaurav Athreya's Master's thesis~\citep{athreya_thesis_2023}, with permission. I (Shikhara) have made some minor edits to make it fit in with the rest of the Napkin.}
 \\
 
-{\color{red}TODO: add general intro text here}
+{\color{red}\hl{TODO: add general intro text here}}
 
 In an unstructured population (no life-stages, no spatial structure, etc.) the use-cases of this framework may be built up in complexity as follows
 \begin{itemize} \itemsep -1mm
@@ -77,13 +77,40 @@ Note that there is a relation between the conditions for convergence and evoluti
 where one can see that convergence stability requires the evaluation of the additional term on the left. 
 Note here the important role of the assumption that mutations are not infinitesimal - if one were to assume that, a population would never actually reach a convergence stable point.
 
-The immediately important points in the trait space are those that are both convergence stable, and uninvadable.
-Such points are called evolutionary stable strategies (ESSs), and constitute endpoints for evolutionary trajectories since they can both be reached by a population starting far away in the trait space, and the population cannot be invaded once this trait has fixed. 
+Thus, we arrive at the following classification of evolutionary singularities:
+\begin{center}
+	\begin{tabularx}{0.4\textwidth}{ 
+			| >{\centering\arraybackslash}X 
+			| >{\centering\arraybackslash}X 
+			| >{\centering\arraybackslash}X | }
+		\hline
+		& \textbf{ES} & \textbf{not ES} \\
+		\hline
+		\textbf{CS} &  \circled{A}  &  \circled{B} \\ 
+		\hline
+		\textbf{not CS} & \circled{C}  & \circled{D} \\
+		\hline
+	\end{tabularx}
+\end{center}
 
-An interesting case is to consider singular points which are convergence stable, but not evolutionarily stable. 
+Points which are not convergent stable are not of interest to us because populations can only attain such a state if they begin there. Thus, \circled{C} and \circled{D} can be ignored for our purposes.\footnote{Singularities of type \circled{C} are sometimes called `garden of Eden' points, since a population that begins at such a point will remain there and cannot be invaded by nearby mutants, but if a population does not begin there (or is somehow driven out by external forces), it can never find its way back to the singularity.}\\
+Points of type \circled{A} are both evolutionarily stable and convergent stable. Such points represent `endpoints' for evolution, since populations are attracted to such points and also cannot evolve away from them since they cannot be invaded by any nearby mutants.
+
+An interesting case is to consider singular points which are convergence stable, but not evolutionarily stable ( type \circled{B} in our table). 
 What happens at such points? 
-The population can reach the point, but then it is susceptible to invasion by nearby mutants. 
-
+The population can reach the point, but then it is susceptible to invasion by nearby mutants. Furthermore, it is susceptible to invasion from distinct types of mutants. To see this, let $x^*$ be such a point, and let $x_1 < x^* < x_2$ be two points in the immediate vicinity of $x^*$.
+\begin{claim}
+	Each of $x_1$ and $x_2$ can invade the other
+\end{claim}
+\begin{proof}
+	Let $g(x) = dx/dt$ denote the fitness gradient for convenience.
+	We can Taylor expand the invasion fitness function as
+	\begin{align*}
+		f(x_2 ,x_1) &= \underbrace{f(x_2 , x_2)}_{=0} + \underbrace{(x_1 - x_2)}_{< 0 }\underbrace{\frac{\partial f}{\partial x_1}(x_2, x_1)\bigg{|}_{x_1 = x_2}}_{=g(x_2)} + \frac{(x_1-x_2)^2}{2} \frac{\partial^2 f}{\partial x_1^2}(x_2 , x_1)\bigg{|}_{x_1 = x_2}
+	\end{align*}
+	where we have neglected terms that are higher than second order. Since $x^*$ is a singular point, $g(x^*) = 0$. Since $x^*$ is convergent stable, $\frac{d g}{dx}\bigg{|}_{x=x^*} < 0$ and we therefore see that $g$ is a decreasing function of $x$ in the immediate vicinity of $x^*$. Thus, since $x_2 > x^*$, we must have $g(x_2) < g(x^*) = 0$, and we can conclude that the second term in the RHS must be positive. Lastly, since $x^*$ is evolutionarily unstable, we must have $\frac{\partial^2 f}{\partial x_1^2}(x^*,x_1)\bigg{|}_{x_1 = x^*} > 0$ by the stability criterion. Thus, assuming $f$ is smooth, for $x_2$ sufficiently close to $x^*$, it must be the case that $\frac{\partial^2 f}{\partial x_1^2}(x_2,x_1)\bigg{|}_{x_1 = x_2} > 0$. Thus, the third term of the RHS is also positive, meaning that $f(x_2, x_1) > 0$, and that $x_1$ can thus invade $x_2$. An exactly analogous argument shows that $f(x_1,x_2) > 0$, thus completing the proof.
+\end{proof}
+This observation leads to the following definition:
 \begin{definition}
 	A \textit{protected polymorphism} is a polymorphic population in which none of the phenotypes can go extinct i.e., all have positive fitnesses when rare and therefore cannot be lost, and therefore none of them can fix. 
 \end{definition}
@@ -112,7 +139,27 @@ The graphical characterization of the above properties is as follows:
 	\item \textbf{Branching point}: convergence stable and not ESS, so conditions (1), (3) and negation (2)
 \end{enumerate}
 
+{\textcolor{red}\hl{TODO: Maybe draw this?}}
+
 The difference between these two notions of stability is now clear: convergence stability describes whether an evolving population can actually reach the singular point, whereas evolutionary stability describes the invadability of a population already at the point. From both the algebraic and the graphical characterizations, one can see that neither condition implies the other - a singular point can be any combination of convergence stable (or not) and evolutionarily stable (or not).  
+
+\subsection{An example of a prediction of adaptive dynamics}
+
+Let us consider the invasion fitness function:
+\begin{equation}
+	\label{AD_cts_logistic_invasion_fitness}
+	f(x,y) = 1 - \frac{\alpha(x,y)K(x)}{K(y)}
+\end{equation}
+This is a model of asexual resource competition:  $\alpha(x,y)$ is called the \emph{competition kernel} and $K(x)$ is called the \emph{carrying capacity function} (formulated in analogy with Lotka-Volterra competition or the logistic equation).  Let us ssume that we have $\alpha(u,v) = \exp{-(u-v)^2/(2\sigma^{2}_{\alpha})}$ and $K(u) = K_{0}\exp{-(u)^2/(2\sigma^{2}_{K})}$, \emph{i.e.} Gaussian carrying capacity and Gaussian competition kernel. Biologically, this means that phenotypes that are closer to each other compete more (through $\alpha$) and that there is also a single phenotype, $x=0$, that is optimal for the abiotic environment (through $K$). Then, it is easy to derive using the definitions of evolutionary stability and convergence stability that the population remains monomorphic if and only if
+\begin{equation}\label{AD_monomorphic_condn}
+	\sigma_K<\sigma_{\alpha}
+\end{equation}
+and evolves polymorphism otherwise.
+\subsubsection{Habitat Filtering}
+One way that \ref{AD_monomorphic_condn} can be satisfied is if $\sigma_K$ is very small. Biologically, this means that the environment is such that only some very particular morphs are viable, and the limit where $\sigma_K = 0$ corresponds to a case where only a single morph is environmentally viable. Ecologists are well-acquainted with this notion, and refer to it as `habitat filtering', the phenomenon in which the habitat itself `selects' for certain phenotypes due to particular limiting abiotic factors.
+
+\subsubsection{Competition and character displacement}
+A second way to satisfy \ref{AD_monomorphic_condn} is if $\sigma_{\alpha}$ is very large. Biologically, this means that competition occurs across a wide range of phenotypes, and the limit where $\sigma_{\alpha} = \infty$ corresponds to frequency-independent competition. In other words, diversification can fail if competition cannot be alleviated through character displacement, \emph{i.e} selection is not disruptive (or has a very weak disruptive component). This could happen if, for example, the morphs are competing for a resource that has no alternatives and can only be acquired in a single way (Ex: Competition for sunlight in plants).
 
 \section{Microscopic descriptions and a stochastic derivation of the canonical equation of adaptive dynamics}
 \label{section:microscopic-descriptions-CE}
