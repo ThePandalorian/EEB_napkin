@@ -15,7 +15,8 @@ Evan writes:
 
 </br>
 With theoretical ecology and evolutionary biology, a very similar problem arises. For instance, one often runs into a situation like the following:
-
+</br>
+</br>
 > I’ll be eating a quick lunch with some empiricist friends from across the campus.
 > They’ll ask me what I’ve been up to the last few weeks, and I’ll tell them that I’ve been thinking about adaptive dynamics in social insects.
 > They’ll ask me what adaptive dynamics is about. I tell them it’s a way of modelling the evolutionary process when ecological interactions and frequency-dependence is important.
@@ -25,4 +26,8 @@ With theoretical ecology and evolutionary biology, a very similar problem arises
 > And then it’s 1PM, people need to go places, and I can’t help but think:
 > _<span style="color:red;">Man, if I had forty hours instead of forty minutes, I bet I could actually have explained this all.</span>_ 
 
-This is my attempt at including some basic notions from evolutionary theory on a napkin. The compiled PDF can be accessed [here](https://thepandalorian.github.io/EEB_napkin/EEB_napkin.pdf).
+</br>
+This is my attempt at including some basic notions from evolutionary theory on a napkin.
+</br>
+</br>
+The PDF is autocompiled using latexmk and a GitHub action. The compiled PDF can be accessed [here](https://thepandalorian.github.io/EEB_napkin/EEB_napkin.pdf). If you are compiling manually, you should be compiling ```EEB_Napkin.tex``` using your favourite LaTeX compiler.
