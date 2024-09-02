@@ -27,7 +27,7 @@ With theoretical ecology and evolutionary biology, a very similar problem arises
 > _<span style="color:red;">Man, if I had forty hours instead of forty minutes, I bet I could actually have explained this all.</span>_ 
 
 </br>
-This is my attempt at including some basic notions from evolutionary theory on a napkin.
+This is my (currently very preliminary) attempt at including some basic notions from evolutionary theory on a napkin.
 </br>
-</br>
-The PDF is autocompiled using latexmk and a GitHub action. The compiled PDF can be accessed [here](https://thepandalorian.github.io/EEB_napkin/EEB_napkin.pdf). If you are compiling manually, you should be compiling ```EEB_Napkin.tex``` using your favourite LaTeX compiler.
+
+The PDF is compiled using a GitHub action. The compiled PDF can be accessed [here](https://thepandalorian.github.io/EEB_napkin/EEB_napkin.pdf) and will be auto-compiled (and thus updated) every time I push to the repo. If you are compiling manually, you should be compiling ```EEB_Napkin.tex``` using your favourite LaTeX compiler. If you wish to contribute or make suggestions, feel free to submit a pull request or email me!
