@@ -34,3 +34,13 @@ This is my (currently very preliminary) attempt at writing down the big ideas be
 </br>
 
 The PDF is compiled using a GitHub action. The compiled PDF can be accessed [here](https://thepandalorian.github.io/EEB_napkin/EEB_napkin.pdf) and will be auto-compiled (and thus updated) every time I push to the repo. If you are compiling manually, you should be compiling ```EEB_Napkin.tex``` using your favourite LaTeX compiler. If you wish to contribute or make suggestions, feel free to submit a pull request or email me!
+</br>
+</br>
+</br>
+Topics I would like to add at some point:
+- Evolutionary graph theory
+- Modern coexistence theory
+- Social evolution - inclusive fitness, public goods, etc
+- Life-history theory and the next generation theorem
+- Evolutionary rescue?
+- To add to spatial evolution: Fisher-KPP equations, pushed vs pulled waves, range expansions
